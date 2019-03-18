@@ -17,16 +17,19 @@ func responderRegistracion(writer http.ResponseWriter, status int, results Regis
 
 
 func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
-  	
+ 
 
 	decoder := json.NewDecoder(request.Body)
-
+	decoder.DisallowUnknownFields ()
 	var datosRegistracion Registracion
+
 	//&nombre_var para decirle que es la var que no tiene datos y va a tener que rellenar
-	err := decoder.Decode(&datosRegistracion)
+	var err = decoder.Decode(&datosRegistracion)
 
 	if(err != nil){
 		panic(err)
+		writer.Header().Set("Content-Type", "application-json")
+		writer.WriteHeader(400)
 	}
 
 	//Para cerrar la lectura de algo
@@ -34,7 +37,13 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	log.Println(datosRegistracion)
 
-    fmt.Println("Se guarda en base de datos")
+	fmt.Println(datosRegistracion.estado)
+
+	
+
+    nuevoEstado(registracionPrueba.estado).ingresarNuevosDatos(&registracionPrueba)
+
+    fmt.Println(datosRegistracion.estado)
 
 	responderRegistracion(writer, 202, datosRegistracion)
 

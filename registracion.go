@@ -1,20 +1,20 @@
 package main
 
 type Registracion struct {
-  IDRegistracion int
-  nombre       string
-  apellido     string
-  email        string
-  telefono     string
-  carrera      string
-  clave        string
-  nombreProfesor string
-  apellidoProfesor string
-  emailProfesor string
-  materia string
-  catedra string
-  facultad string
-  universidad string
-  estado int
+  iDRegistracion int    	`json:"IDRegistracion"`
+  Nombre       string   	`json:"Nombre"`
+  Apellido     string 		`json:"Apellido"`
+  Email        string 		`json:"Email"`
+  Telefono     string 		`json:"Telefono"`
+  Carrera      string 		`json:"Carrera"`
+  Clave        string 		`json:"Clave"`
+  NombreProfesor string 	`json:"NombreProfesor"`
+  ApellidoProfesor string 	`json:"ApellidoProfesor"`
+  EmailProfesor string 		`json:"EmailProfesora"`
+  Materia string  			`json:"Materia"`
+  Catedra string 			`json:"Catedra"`
+  Facultad string 			`json:"Facultad"`
+  Universidad string 		`json:"Universidad"`
+  estado int    			`json:"Estado"`
   //estado  estado `gorm:"polymorphic:Owner;"`
 }

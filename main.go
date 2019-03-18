@@ -13,6 +13,8 @@ var registracionPrueba = Registracion{0, "Walter", "Schmidt", "sebastian.taka@ho
 
 func main() {
   
+  CrearTablaXRERegistracion();
+
   router := newRouter()
   
   fmt.Println("Se empieza a escuchar el puerto")
