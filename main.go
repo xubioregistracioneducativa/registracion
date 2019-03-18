@@ -1,29 +1,22 @@
 package main
 
-import "fmt"
-import "github.com/jinzhu/gorm"
-import _ "github.com/jinzhu/gorm/dialects/postgres"
+//import "fmt"
+//import "github.com/jinzhu/gorm"
+//import _ "github.com/jinzhu/gorm/dialects/postgres"
 
-var db gorm.DB
+//var db gorm.DB
 
-type Registracion struct {
-  gorm.Model
-  DatosRegistracion  string 
-  tipo  Tipo `gorm:"polymorphic:Owner;"`
-}
-
-
-type Tipo int
-
-const (
-  TipoA Tipo = 0
-  TipoB Tipo = 2
-)
 
 func main() {
-
-	db, err := gorm.Open("postgres", "host=myhost port=myport user=gorm dbname=gorm password=mypassword")
-	fmt.Println(err)
-	defer db.Close()
+  var registracion = Registracion{0, "Walter", "Schmidt", "sebastian.taka@hotmail.com", "1167188487", "Ingenieria en Sistemas de Informacion", "q1q1qq", "Marina", "Olivella", "molivella@xubio.com" ,"Analisis de Sistemas", "", "Facultad Regional Buenos Aires", "Universidad tecnologica nacional", estadoInicioRegistracionID}
+  for i := 0; i < 4;i++{
+    
+    nuevoEstado(registracion.estado).ingresarNuevosDatos(&registracion)
+    nuevoEstado(registracion.estado).aceptarPorCS(&registracion)
+    nuevoEstado(registracion.estado).rechazarPorCS(&registracion)
+    nuevoEstado(registracion.estado).aceptarPorProfesor(&registracion)
+  }
+  //fmt.Println(err)
+	//defer db.Close()
 
 }
