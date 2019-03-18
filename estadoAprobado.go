@@ -20,7 +20,7 @@ func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) {
   registracion.estado = estadoAprobadoID
 }
 
-func (estado estadoAprobado ) aceptarPorProfesor (registracion *Registracion) {
+func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) {
   fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
   registracion.estado = estadoConfirmadoID
 }

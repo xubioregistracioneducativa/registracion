@@ -20,6 +20,6 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   registracion.estado = estadoAprobadoID
 }
 
-func (estado estadoPendienteAprobacion ) aceptarPorProfesor (registracion *Registracion) {
+func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion) {
   fmt.Println("ERROR: Esta registracion esta todavía pendiente")
 }

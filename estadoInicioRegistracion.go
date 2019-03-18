@@ -19,6 +19,6 @@ func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion
   fmt.Println("ERROR: Esta registracion aun no fue completada o fue rechazada anteriormente")
 }
 
-func (estado estadoInicioRegistracion ) aceptarPorProfesor (registracion *Registracion) {
+func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) {
   fmt.Println("ERROR: Esta registracion aun no fue completada o fue rechazada anteriormente")
 }

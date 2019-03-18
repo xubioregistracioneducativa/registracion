@@ -18,7 +18,7 @@ func (estado estadoConfirmado ) aceptarPorCS (registracion *Registracion) {
   fmt.Println("ERROR: Esta registracion ya fue confirmada")
 }
 
-func (estado estadoConfirmado ) aceptarPorProfesor (registracion *Registracion) {
+func (estado estadoConfirmado ) confirmarPorProfesor (registracion *Registracion) {
   fmt.Println("ERROR: Esta registracion ya fue confirmada")
 
 }

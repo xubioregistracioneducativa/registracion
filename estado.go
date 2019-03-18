@@ -11,19 +11,19 @@ type estado interface {
   ingresarNuevosDatos(*Registracion)
   rechazarPorCS(*Registracion)
   aceptarPorCS(*Registracion)
-  aceptarPorProfesor(*Registracion)
+  confirmarPorProfesor(*Registracion)
 }
 
-func nuevoEstado (idEstado int) Estado {
+func nuevoEstado (idEstado int) estado {
     switch(idEstado) {
     case estadoInicioRegistracionID:
-      return EstadoInicioRegistracion{}
+      return estadoInicioRegistracion{}
     case estadoPendienteAprobacionID:
-      return EstadoPendienteAprobacion{}
+      return estadoPendienteAprobacion{}
     case estadoAprobadoID:
-      return EstadoAprobado{}
+      return estadoAprobado{}
     case estadoConfirmadoID:
-      return EstadoConfirmado{}
+      return estadoConfirmado{}
     default:
     return nil
   }

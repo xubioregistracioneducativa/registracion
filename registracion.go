@@ -16,5 +16,5 @@ type Registracion struct {
   facultad string
   universidad string
   estado int
-  //estado  Estado `gorm:"polymorphic:Owner;"`
+  //estado  estado `gorm:"polymorphic:Owner;"`
 }
