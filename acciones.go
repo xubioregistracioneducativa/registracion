@@ -39,7 +39,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	fmt.Println(datosRegistracion.estado)
 
-	
+	datosRegistracion.estado = estadoInicioRegistracionID
 
     nuevoEstado(registracionPrueba.estado).ingresarNuevosDatos(&registracionPrueba)
 
