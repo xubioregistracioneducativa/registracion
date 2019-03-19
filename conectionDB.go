@@ -90,8 +90,8 @@ func updateRegistracion(registracion Registracion) {
 	tx.Commit()
 	fmt.Println("Se updateo el registro con ID:", registracion.iDRegistracion)
 }
-/*
-func verificarMailDeRegistro(mail string){
+
+func mailDeRegistroLibre(mail string) bool{
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
@@ -100,14 +100,37 @@ func verificarMailDeRegistro(mail string){
 
     var cantidadDeCuentas int
 
-	sqlStatement := `return (select coalesce(count(idregistracion), 0) as cantidadDeCuentas from xreregistracion where email ilike $1;`
-	cantidadDeCuentas, err = db.Exec(sqlStatement, 'wschmidt@xubio.com')
-
+	sqlStatement := `select count(idregistracion) as cantidadDeCuentas from xreregistracion where email ilike $1;`
+	
+	row := db.QueryRow(sqlStatement, mail)
+	err = row.Scan(&cantidadDeCuentas)
 	if err != nil {
 	  panic(err)
 	}
 
 	fmt.Println(cantidadDeCuentas)
 
+	if cantidadDeCuentas > 0 {
+		return false
+	}
+	return true
+
 }
-*/
+
+func reingresarRegistracion(registracion Registracion) {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `select idregistracion from xreregistracion where email ilike $1;`
+	
+	row := db.QueryRow(sqlStatement, registracion.Email)
+	err = row.Scan(&(registracion.iDRegistracion))
+	if err != nil {
+	  panic(err)
+	}
+
+	updateRegistracion(registracion)
+}
