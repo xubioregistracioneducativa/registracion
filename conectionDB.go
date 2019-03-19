@@ -3,7 +3,6 @@ package main
 import (
   "database/sql"
   "fmt"
-
   _ "github.com/lib/pq"
 )
 
@@ -28,12 +27,11 @@ func CrearTablaXRERegistracion(){
 	sqlStatement := `CREATE TABLE IF NOT EXISTS XRERegistracion 
 	(idregistracion SERIAL PRIMARY KEY, Nombre VARCHAR, Apellido VARCHAR, Email VARCHAR UNIQUE NOT NULL, Telefono VARCHAR,
 		Carrera VARCHAR, Clave VARCHAR, NombreProfesor VARCHAR, ApellidoProfesor VARCHAR, EmailProfesor VARCHAR UNIQUE NOT NULL,
-		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Uniersidad VARCHAR, estado INT);`
+		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Universidad VARCHAR, estado INT);`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
-	  panic(err)
+		panic(err)
 	}
-
 }
 
 func insertarNuevaRegistracion(registracion Registracion) int{
@@ -44,15 +42,23 @@ func insertarNuevaRegistracion(registracion Registracion) int{
 	}
 	defer db.Close()
 
+	tx, err := db.Begin()
+	if err != nil {
+        panic(err)
+    }
+
 	sqlStatement := `INSERT INTO XRERegistracion (Nombre, Apellido, Email, Telefono, Carrera, Clave, NombreProfesor, ApellidoProfesor, EmailProfesor, Materia, Catedra, Facultad, Universidad, estado)
 	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING idregistracion`
 	id := 0
+
 	err = db.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&id)
 	if err != nil {
+	  tx.Rollback()
 	  panic(err)
 	}
+	tx.Commit()
 	fmt.Println("New record ID is:", id)
 	return id
 }
@@ -78,3 +84,24 @@ func updateRegistracion(registracion Registracion) {
 
 	fmt.Println("Se updateo el registro con ID:", registracion.iDRegistracion)
 }
+/*
+func verificarMailDeRegistro(mail string){
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+    var cantidadDeCuentas int
+
+	sqlStatement := `return (select coalesce(count(idregistracion), 0) as cantidadDeCuentas from xreregistracion where email ilike $1;`
+	cantidadDeCuentas, err = db.Exec(sqlStatement, 'wschmidt@xubio.com')
+
+	if err != nil {
+	  panic(err)
+	}
+
+	fmt.Println(cantidadDeCuentas)
+
+}
+*/

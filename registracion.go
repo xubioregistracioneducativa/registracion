@@ -10,7 +10,7 @@ type Registracion struct {
   Clave        string 		`json:"Clave"`
   NombreProfesor string 	`json:"NombreProfesor"`
   ApellidoProfesor string 	`json:"ApellidoProfesor"`
-  EmailProfesor string 		`json:"EmailProfesora"`
+  EmailProfesor string 		`json:"EmailProfesor"`
   Materia string  			`json:"Materia"`
   Catedra string 			`json:"Catedra"`
   Facultad string 			`json:"Facultad"`

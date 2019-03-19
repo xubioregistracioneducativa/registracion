@@ -8,7 +8,8 @@ type estadoInicioRegistracion struct {
 
 func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Registracion) {
 	fmt.Println("Se guarda la Registracion")
-  registracion.estado = estadoPendienteAprobacionID
+	registracion.estado = estadoPendienteAprobacionID
+	insertarNuevaRegistracion(*registracion)
 }
 
 func (estado estadoInicioRegistracion ) rechazarPorCS (registracion *Registracion) {

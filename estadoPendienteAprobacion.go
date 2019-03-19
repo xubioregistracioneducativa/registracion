@@ -13,11 +13,13 @@ func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Regi
 func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) {
   fmt.Println("Se reinicia la registracion a 0")
   registracion.estado = estadoInicioRegistracionID
+  updateRegistracion(*registracion)
 }
 
 func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) {
   fmt.Println("Se envía mail al alumno y al profesor")
   registracion.estado = estadoAprobadoID
+  updateRegistracion(*registracion)
 }
 
 func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion) {

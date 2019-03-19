@@ -41,7 +41,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	datosRegistracion.estado = estadoInicioRegistracionID
 
-    nuevoEstado(registracionPrueba.estado).ingresarNuevosDatos(&registracionPrueba)
+    nuevoEstado(datosRegistracion.estado).ingresarNuevosDatos(&datosRegistracion)
 
 	responderRegistracion(writer, 202, datosRegistracion)
 

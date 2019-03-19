@@ -14,7 +14,7 @@ var registracionPrueba = Registracion{1, "Walter", "Schmidt", "sebastian.taka@ho
 func main() {
   
   CrearTablaXRERegistracion()
-
+  //verificarMailDeRegistro("")
   router := newRouter()
   
   fmt.Println("Se empieza a escuchar el puerto")
