@@ -51,7 +51,7 @@ func insertarNuevaRegistracion(registracion Registracion) int{
 	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING idregistracion`
 	id := 0
 
-	err = db.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
+	err = tx.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&id)
 	if err != nil {
@@ -71,17 +71,23 @@ func updateRegistracion(registracion Registracion) {
 	}
 	defer db.Close()
 
+	tx, err := db.Begin()
+	if err != nil {
+        panic(err)
+    }
+
 	sqlStatement := `
 	UPDATE XRERegistracion
 	SET Nombre = $2, Apellido = $3, Email = $4, Telefono = $5, Carrera = $6, Clave = $7, NombreProfesor = $8, ApellidoProfesor = $9, EmailProfesor = $10, Materia = $11, Catedra = $12, Facultad = $13, Universidad = $14, estado = $15
 	WHERE idregistracion = $1;`
-	_, err = db.Exec(sqlStatement, registracion.iDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
+	_, err = tx.Exec(sqlStatement, registracion.iDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, registracion.estado)
 	if err != nil {
+	  tx.Rollback()
 	  panic(err)
 	}
-
+	tx.Commit()
 	fmt.Println("Se updateo el registro con ID:", registracion.iDRegistracion)
 }
 /*
