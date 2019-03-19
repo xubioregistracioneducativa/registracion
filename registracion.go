@@ -15,6 +15,6 @@ type Registracion struct {
   Catedra string 			`json:"Catedra"`
   Facultad string 			`json:"Facultad"`
   Universidad string 		`json:"Universidad"`
-  estado int    			`json:"Estado"`
+  estado int    			
   //estado  estado `gorm:"polymorphic:Owner;"`
 }

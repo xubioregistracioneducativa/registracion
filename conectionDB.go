@@ -26,12 +26,55 @@ func CrearTablaXRERegistracion(){
 	defer db.Close()
 
 	sqlStatement := `CREATE TABLE IF NOT EXISTS XRERegistracion 
-	(idregistracion INT PRIMARY KEY, Nombre VARCHAR, Apellido VARCHAR, Email VARCHAR UNIQUE NOT NULL, Telefono VARCHAR,
+	(idregistracion SERIAL PRIMARY KEY, Nombre VARCHAR, Apellido VARCHAR, Email VARCHAR UNIQUE NOT NULL, Telefono VARCHAR,
 		Carrera VARCHAR, Clave VARCHAR, NombreProfesor VARCHAR, ApellidoProfesor VARCHAR, EmailProfesor VARCHAR UNIQUE NOT NULL,
-		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Universidad VARCHAR, estado INT);`
+		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Uniersidad VARCHAR, estado INT);`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
 	  panic(err)
 	}
 
+}
+
+func insertarNuevaRegistracion(registracion Registracion) int{
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `INSERT INTO XRERegistracion (Nombre, Apellido, Email, Telefono, Carrera, Clave, NombreProfesor, ApellidoProfesor, EmailProfesor, Materia, Catedra, Facultad, Universidad, estado)
+	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING idregistracion`
+	id := 0
+	err = db.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
+		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
+		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&id)
+	if err != nil {
+	  panic(err)
+	}
+	fmt.Println("New record ID is:", id)
+	return id
+}
+
+func updateRegistracion(registracion Registracion) {
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `
+	UPDATE XRERegistracion
+	SET Nombre = $2, Apellido = $3, Email = $4, Telefono = $5, Carrera = $6, Clave = $7, NombreProfesor = $8, ApellidoProfesor = $9, EmailProfesor = $10, Materia = $11, Catedra = $12, Facultad = $13, Universidad = $14, estado = $15
+	WHERE idregistracion = $1;`
+	_, err = db.Exec(sqlStatement, registracion.iDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
+		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
+		registracion.Facultad, registracion.Universidad, registracion.estado)
+	if err != nil {
+	  panic(err)
+	}
+
+	fmt.Println("Se updateo el registro con ID:", registracion.iDRegistracion)
 }
