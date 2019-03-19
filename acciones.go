@@ -3,6 +3,8 @@ package main
 import (
     "net/http"
     "encoding/json"
+    "github.com/gorilla/mux"
+    "strings"
 )
 
 func responderRegistracion(writer http.ResponseWriter, status int, results Registracion){
@@ -28,8 +30,17 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 func AceptarCS(writer http.ResponseWriter, request *http.Request){
 
-  	nuevoEstado(registracionPrueba.estado).aceptarPorCS(&registracionPrueba)
+	id := obtenerID(request)
 
-	responderRegistracion(writer, 202, registracionPrueba)
+	registracion := obtenerRegistracionPorID(id)
 
+  	nuevoEstado(registracion.estado).aceptarPorCS(&registracion)
+
+	responderRegistracion(writer, 202, registracion)
+
+}
+
+func obtenerID(request *http.Request) int {
+	params := mux.Vars(request)
+	return params["id"]
 }

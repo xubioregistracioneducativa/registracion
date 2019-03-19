@@ -134,3 +134,37 @@ func reingresarRegistracion(registracion Registracion) {
 
 	updateRegistracion(registracion)
 }
+
+func obtenerRegistracionPorID(registracionID int) Registracion {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `select * from xreregistracion where iDRegistracion ilike $1;`
+	
+	row := db.QueryRow(sqlStatement, registracionID)
+	if err != nil {
+	  panic(err)
+	}
+
+	var registracion Registracion
+
+	registracion.iDRegistracion = registracionID
+
+	row.Scan(&(registracion.Nombre))
+	row.Scan(&(registracion.Apellido))
+	row.Scan(&(registracion.Email))
+	row.Scan(&(registracion.Telefono))
+	row.Scan(&(registracion.Carrera))
+	row.Scan(&(registracion.Clave))
+	row.Scan(&(registracion.NombreProfesor))
+	row.Scan(&(registracion.ApellidoProfesor))
+	row.Scan(&(registracion.EmailProfesor))
+	row.Scan(&(registracion.Materia))
+	row.Scan(&(registracion.Catedra))
+	row.Scan(&(registracion.Facultad))
+	row.Scan(&(registracion.Universidad))
+	row.Scan(&(registracion.estado))
+}
