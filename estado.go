@@ -10,10 +10,10 @@ const (  // iota is reset to 0
 )
 
 type estado interface {
-  ingresarNuevosDatos(*Registracion)
-  rechazarPorCS(*Registracion)
-  aceptarPorCS(*Registracion)
-  confirmarPorProfesor(*Registracion)
+  ingresarNuevosDatos(*Registracion) error
+  rechazarPorCS(*Registracion) error
+  aceptarPorCS(*Registracion) error
+  confirmarPorProfesor(*Registracion) error
 }
 
 func nuevoEstado (idEstado estadoID) estado {

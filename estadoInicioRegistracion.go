@@ -1,29 +1,39 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"errors"	
+)
 
 type estadoInicioRegistracion struct {
 
 }
 
-func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Registracion) {
+func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Registracion) error {
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoPendienteAprobacionID
-	if mailDeRegistroLibre((*registracion).Email) {
-    	insertarNuevaRegistracion(*registracion)
+	var err error
+	if emailDeRegistroLibre((*registracion).Email) {
+    	err = insertarNuevaRegistracion(registracion)
   	} else {
-  		reingresarRegistracion(*registracion)
+  		err = reingresarRegistracion(registracion)
   	}
+
+  	if err != nil {
+ 		return err
+  	}
+
+  	return nil
 }
 
-func (estado estadoInicioRegistracion ) rechazarPorCS (registracion *Registracion) {
-  fmt.Println("ERROR: Esta registracion aun no fue completada o fue rechazada anteriormente")
+func (estado estadoInicioRegistracion ) rechazarPorCS (registracion *Registracion) error {
+  return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }
 
-func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion) {
-  fmt.Println("ERROR: Esta registracion aun no fue completada o fue rechazada anteriormente")
+func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion) error{
+  return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }
 
-func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) {
-  fmt.Println("ERROR: Esta registracion aun no fue completada o fue rechazada anteriormente")
+func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) error{
+  return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }

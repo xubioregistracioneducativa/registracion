@@ -4,6 +4,7 @@ import (
   "database/sql"
   "fmt"
   _ "github.com/lib/pq"
+  "errors"
 )
 
 const (
@@ -34,64 +35,93 @@ func CrearTablaXRERegistracion(){
 	}
 }
 
-func insertarNuevaRegistracion(registracion Registracion) int{
+func insertarNuevaRegistracion(registracion *Registracion) error{
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
-        panic(err)
+        return err
     }
 
 	sqlStatement := `INSERT INTO XRERegistracion (Nombre, Apellido, Email, Telefono, Carrera, Clave, NombreProfesor, ApellidoProfesor, EmailProfesor, Materia, Catedra, Facultad, Universidad, estado)
 	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING idregistracion`
-	id := 0
 
 	err = tx.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
-		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&id)
+		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&registracion.IDRegistracion)
 	if err != nil {
 	  tx.Rollback()
-	  panic(err)
+	  return err
 	}
 	tx.Commit()
-	fmt.Println("New record ID is:", id)
-	return id
+	fmt.Println("New record ID is:", registracion.IDRegistracion)
+	return nil
 }
 
-func updateRegistracion(registracion Registracion) {
+func updateRegistracion(registracion *Registracion) error {
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
-        panic(err)
+        return err
     }
 
 	sqlStatement := `
 	UPDATE XRERegistracion
 	SET Nombre = $2, Apellido = $3, Email = $4, Telefono = $5, Carrera = $6, Clave = $7, NombreProfesor = $8, ApellidoProfesor = $9, EmailProfesor = $10, Materia = $11, Catedra = $12, Facultad = $13, Universidad = $14, estado = $15
 	WHERE idregistracion = $1;`
-	_, err = tx.Exec(sqlStatement, registracion.iDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
+	_, err = tx.Exec(sqlStatement, registracion.IDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, registracion.estado)
 	if err != nil {
 	  tx.Rollback()
-	  panic(err)
+	  return err
 	}
 	tx.Commit()
-	fmt.Println("Se updateo el registro con ID:", registracion.iDRegistracion)
+	fmt.Println("Se updateo el registro con ID:", registracion.IDRegistracion)
+
+	return nil
 }
 
-func mailDeRegistroLibre(mail string) bool{
+func reingresarRegistracion(registracion *Registracion) error {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `select idregistracion from xreregistracion where email ilike $1;`
+	
+	row := db.QueryRow(sqlStatement, registracion.Email)
+	err = row.Scan(&registracion.IDRegistracion)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("SQL: No se encontraron registraciones con ese mail")
+		}
+	  	return err
+	}
+
+	err = updateRegistracion(registracion)
+
+	if err != nil {
+	  	return err
+	}
+
+	return nil
+}
+
+func emailDeRegistroLibre(mail string) bool{
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
@@ -117,54 +147,51 @@ func mailDeRegistroLibre(mail string) bool{
 
 }
 
-func reingresarRegistracion(registracion Registracion) {
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
 
-	sqlStatement := `select idregistracion from xreregistracion where email ilike $1;`
-	
-	row := db.QueryRow(sqlStatement, registracion.Email)
-	err = row.Scan(&(registracion.iDRegistracion))
-	if err != nil {
-	  panic(err)
-	}
-
-	updateRegistracion(registracion)
-}
-
-func obtenerRegistracionPorID(registracionID int) Registracion {
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	sqlStatement := `select * from xreregistracion where iDRegistracion ilike $1;`
-	
-	row := db.QueryRow(sqlStatement, registracionID)
-	if err != nil {
-	  panic(err)
-	}
-
+func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 	var registracion Registracion
 
-	registracion.iDRegistracion = registracionID
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
-	row.Scan(&(registracion.Nombre))
-	row.Scan(&(registracion.Apellido))
-	row.Scan(&(registracion.Email))
-	row.Scan(&(registracion.Telefono))
-	row.Scan(&(registracion.Carrera))
-	row.Scan(&(registracion.Clave))
-	row.Scan(&(registracion.NombreProfesor))
-	row.Scan(&(registracion.ApellidoProfesor))
-	row.Scan(&(registracion.EmailProfesor))
-	row.Scan(&(registracion.Materia))
-	row.Scan(&(registracion.Catedra))
-	row.Scan(&(registracion.Facultad))
-	row.Scan(&(registracion.Universidad))
-	row.Scan(&(registracion.estado))
+	sqlStatement := `select * from xreregistracion where iDRegistracion = $1;`
+
+	err = db.QueryRow(sqlStatement, registracionID).Scan(&registracion.IDRegistracion, &registracion.Nombre, &registracion.Apellido, &registracion.Email, &registracion.Telefono, &registracion.Carrera, &registracion.Clave, 
+		&registracion.NombreProfesor, &registracion.ApellidoProfesor, &registracion.EmailProfesor, &registracion.Materia, &registracion.Catedra, &registracion.Facultad, &registracion.Universidad, &registracion.estado)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return registracion , errors.New("SQL: No se encontraron registraciones con ese ID")
+		}
+	  	return registracion, err
+	}
+
+	return registracion, nil
+}
+
+func obtenerEstadoIDPorEmail(email string) (estadoID, error){
+
+	var estado estadoID
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return 0, err
+	}
+	defer db.Close()
+
+	sqlStatement := `select estado from xreregistracion where email = $1;`
+
+	err = db.QueryRow(sqlStatement, email).Scan(&estado)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return estadoInicioRegistracionID, nil
+		}
+	  	return 0, err
+	}
+
+	return estado, nil
 }

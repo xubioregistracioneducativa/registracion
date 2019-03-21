@@ -34,6 +34,18 @@ var routes = Routes{
 		AceptarCS,
 	},
 	Route{
+		"RechazarCS",
+		"GET",
+		"/RechazarCS/{id}",
+		RechazarCS,
+	},
+	Route{
+		"ConfirmarProfesor",
+		"GET",
+		"/ConfirmarProfesor/{id}",
+		ConfirmarProfesor,
+	},
+	Route{
 		"NuevaRegistracion",
 		"POST",
 		"/NuevaRegistracion",

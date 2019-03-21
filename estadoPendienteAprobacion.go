@@ -1,27 +1,32 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type estadoPendienteAprobacion struct {
 
 }
 
-func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Registracion) {
-  fmt.Println("ERROR: No se puede enviar una nueva registracion mientras esta se encuentra pendiente")
+func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Registracion) error{
+  return errors.New("No se puede enviar una nueva registracion mientras esta se encuentra pendiente")
 }
 
-func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) {
+func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) error {
   fmt.Println("Se reinicia la registracion a 0")
   registracion.estado = estadoInicioRegistracionID
-  updateRegistracion(*registracion)
+  updateRegistracion(registracion)
+  return nil
 }
 
-func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) {
+func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) error {
   fmt.Println("Se envía mail al alumno y al profesor")
   registracion.estado = estadoAprobadoID
-  updateRegistracion(*registracion)
+  updateRegistracion(registracion)
+  return nil
 }
 
-func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion) {
-  fmt.Println("ERROR: Esta registracion esta todavía pendiente")
+func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion)error {
+  return errors.New("Esta registracion esta todavía pendiente")
 }

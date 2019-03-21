@@ -1,7 +1,7 @@
 package main
 
 type Registracion struct {
-  iDRegistracion int    	`json:"IDRegistracion"`
+  IDRegistracion int    	`json:"IDRegistracion"`
   Nombre       string   	`json:"Nombre"`
   Apellido     string 		`json:"Apellido"`
   Email        string 		`json:"Email"`
