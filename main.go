@@ -13,12 +13,12 @@ import (
 
 func main() {
   
-  CrearTablaXRERegistracion()
-  
+  //CrearTablaXRERegistracion()
+
   router := newRouter()
   
   fmt.Println("Se empieza a escuchar el puerto")
-  server := http.ListenAndServe(":8080", router)
+  server := http.ListenAndServe(":8081", router)
 
   log.Fatal(server)
 

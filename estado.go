@@ -1,5 +1,7 @@
 package main
 
+import "errors"
+
 type estadoID int
 
 const (  // iota is reset to 0
@@ -16,17 +18,17 @@ type estado interface {
   confirmarPorProfesor(*Registracion) error
 }
 
-func nuevoEstado (idEstado estadoID) estado {
+func nuevoEstado (idEstado estadoID) (estado, error) {
     switch(idEstado) {
     case estadoInicioRegistracionID:
-      return estadoInicioRegistracion{}
+      return estadoInicioRegistracion{}, nil
     case estadoPendienteAprobacionID:
-      return estadoPendienteAprobacion{}
+      return estadoPendienteAprobacion{}, nil
     case estadoAprobadoID:
-      return estadoAprobado{}
+      return estadoAprobado{}, nil
     case estadoConfirmadoID:
-      return estadoConfirmado{}
+      return estadoConfirmado{}, nil
     default:
-    return nil
+    return nil, errors.New("Esta registracion se encuentra en un estado desconocido")
   }
 }

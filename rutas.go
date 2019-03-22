@@ -28,22 +28,10 @@ func newRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
-		"AceptarCS",
+		"ModificarRegistracion",
 		"GET",
-		"/AceptarCS/{id}",
-		AceptarCS,
-	},
-	Route{
-		"RechazarCS",
-		"GET",
-		"/RechazarCS/{id}",
-		RechazarCS,
-	},
-	Route{
-		"ConfirmarProfesor",
-		"GET",
-		"/ConfirmarProfesor/{id}",
-		ConfirmarProfesor,
+		"/{validationCode}/{input}/{id}",
+		ModificarRegistracion,
 	},
 	Route{
 		"NuevaRegistracion",

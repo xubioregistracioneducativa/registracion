@@ -27,6 +27,7 @@ func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) error {
 
 func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) error {
   fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
+  registrarTenant(registracion)
   registracion.estado = estadoConfirmadoID
   updateRegistracion(registracion)
   return nil
