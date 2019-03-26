@@ -41,7 +41,14 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	registracion, err := obtenerRegistracionPorID(id)
+	link, err := obtenerLinkPorUrl(obtenerUrl(params["input"], id, params["validationCode"]))
+
+	if err != nil {
+		responderError(writer, 400, err.Error())
+		return
+	}
+
+	registracion, err := obtenerRegistracionPorID(link.RegistracionID)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
@@ -54,10 +61,8 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		responderError(writer, 400, err.Error())
 		return
 	}
-
-	input := params["input"]
 	
-	switch(input) {
+	switch(link.Input) {
     case "AceptarCS":
       err = estado.aceptarPorCS(&registracion)
     case "RechazarCS":
@@ -103,6 +108,19 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
+	err = eliminarLinksPorID(datosRegistracion.IDRegistracion)
+
+	if err != nil {
+		responderError(writer, 400, err.Error())
+		return
+	}
+
+	err = generarLinks(datosRegistracion.IDRegistracion)
+
+	if err != nil {
+		responderError(writer, 400, err.Error())
+		return
+	}
 	responderJSON(writer, 202, datosRegistracion)
 
 }

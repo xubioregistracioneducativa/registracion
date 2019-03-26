@@ -30,7 +30,7 @@ var routes = Routes{
 	Route{
 		"ModificarRegistracion",
 		"GET",
-		"/{validationCode}/{input}/{id}",
+		"/{input}/{id}/{validationCode}",
 		ModificarRegistracion,
 	},
 	Route{

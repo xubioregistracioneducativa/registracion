@@ -12,10 +12,15 @@ const (
   port     = 5432
   user     = "postgres"
   password = "Post66MM/"
-  dbname   = "DES_MULTITENANT_AR_1"
+  dbname   = "faf_multitenant_go"
 )
 
 var psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+func CrearTablas()  {
+	CrearTablaXRERegistracion()
+	CrearTablaXRELink()
+}
 
 func CrearTablaXRERegistracion(){
 	
@@ -34,6 +39,23 @@ func CrearTablaXRERegistracion(){
 		panic(err)
 	}
 }
+
+func CrearTablaXRELink(){
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `CREATE TABLE IF NOT EXISTS XRELink 
+	(Url VARCHAR PRIMARY KEY, input VARCHAR, ValidationCode VARCHAR, IDRegistracion INT REFERENCES xreregistracion);`
+	_, err = db.Exec(sqlStatement)
+	if err != nil {
+		panic(err)
+	}
+}
+
 
 func insertarNuevaRegistracion(registracion *Registracion) error{
 
@@ -70,6 +92,7 @@ func updateRegistracion(registracion *Registracion) error {
 		return err
 	}
 	defer db.Close()
+
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -117,7 +140,6 @@ func reingresarRegistracion(registracion *Registracion) error {
 	if err != nil {
 	  	return err
 	}
-
 	return nil
 }
 
@@ -131,7 +153,7 @@ func emailDeRegistroLibre(mail string) bool{
     var cantidadDeCuentas int
 
 	sqlStatement := `select count(idregistracion) as cantidadDeCuentas from xreregistracion where email ilike $1;`
-	
+
 	row := db.QueryRow(sqlStatement, mail)
 	err = row.Scan(&cantidadDeCuentas)
 	if err != nil {
@@ -194,4 +216,99 @@ func obtenerEstadoIDPorEmail(email string) (estadoID, error){
 	}
 
 	return estado, nil
+}
+
+func insertarNuevoLink(link *Link) error {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStatement := `INSERT INTO XRELink (Url, Input, ValidationCode, idregistracion)
+	 VALUES ($1, $2, $3, $4)`
+
+	_ , err = tx.Exec(sqlStatement, link.Url, link.Input, link.ValidationCode, link.RegistracionID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	fmt.Println("Se inserto el link: ", link.Url)
+	return nil
+}
+
+func eliminarLink(url Url) error {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStatement := `DELETE FROM XRELink WHERE url = $1`
+
+	_ , err = tx.Exec(sqlStatement, url)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	fmt.Println("Se elimino el link: ", url)
+	return nil
+}
+
+func obtenerLinkPorUrl(url Url) (Link, error){
+	var link Link
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return link, err
+	}
+	defer db.Close()
+
+	sqlStatement := `select * from xrelink where url = $1;`
+
+	err = db.QueryRow(sqlStatement, url).Scan(&link.Url,&link.Input, &link.ValidationCode, &link.RegistracionID)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return link , errors.New("El link no es valido o ya fue utilizado ")
+		}
+		return link, err
+	}
+
+	return link, nil
+}
+
+func eliminarLinksPorID(IDRegistracion int) error {
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStatement := `DELETE FROM XRELink WHERE IDRegistracion = $1`
+
+	_ , err = tx.Exec(sqlStatement, IDRegistracion)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }

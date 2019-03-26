@@ -18,10 +18,9 @@ func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Regis
   	} else {
   		err = reingresarRegistracion(registracion)
   	}
-
-  	if err != nil {
- 		return err
-  	}
+	if err != nil {
+		return err
+	}
 
   	return nil
 }
