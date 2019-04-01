@@ -38,3 +38,7 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
 func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion)error {
   return errors.New("Esta registracion esta todavía pendiente")
 }
+
+func (estado estadoPendienteAprobacion ) consultarEstado () string {
+  return fmt.Sprint("Esta registracion se encuentra pendiente de aprobacion por nuestro equipo")
+}

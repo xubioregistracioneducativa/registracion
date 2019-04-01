@@ -17,6 +17,7 @@ func generarLinks(registracionID int) error {
   err := generarLink("AceptarCS", registracionID)
   err = generarLink("RechazarCS", registracionID)
   err = generarLink("ConfirmarProfesor", registracionID)
+  err = generarLink("ConsultarEstado", registracionID)
   if err != nil {
     return err
   }

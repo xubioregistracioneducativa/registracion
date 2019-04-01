@@ -282,7 +282,7 @@ func obtenerLinkPorUrl(url Url) (Link, error){
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return link , errors.New("El link no es valido o ya fue utilizado ")
+			return link , errors.New("El link no es valido")
 		}
 		return link, err
 	}

@@ -36,3 +36,7 @@ func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion
 func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) error{
   return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }
+
+func (estado estadoInicioRegistracion ) consultarEstado () string {
+	return fmt.Sprint("Esta registracion se encuentra en el inicio de registracion")
+}

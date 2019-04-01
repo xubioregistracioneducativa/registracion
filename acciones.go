@@ -69,8 +69,13 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
       err = estado.rechazarPorCS(&registracion)
     case "ConfirmarProfesor":
       err = estado.confirmarPorProfesor(&registracion)
+	case "ConsultarEstado":
+		mensajeEstado := estado.consultarEstado()
+		responderJSON(writer, 202, mensajeEstado)
+		return
     default:
     	responderError(writer, 400, "No se reconoce el input")
+		return
  	 }
 
   	if err != nil {

@@ -1,5 +1,11 @@
 package main
 
+import (
+  "fmt"
+  "log"
+  "net/http"
+)
+
 //import "github.com/jinzhu/gorm"
 //import _ "github.com/jinzhu/gorm/dialects/postgres"
 
@@ -8,15 +14,15 @@ package main
 
 func main() {
   CrearTablas()
-  var registracion *Registracion
-  registrarTenant(registracion)
+  //var registracion *Registracion
+  //registrarTenant(registracion)
 
-  /*
+
   router := newRouter()
   
   fmt.Println("Se empieza a escuchar el puerto")
   server := http.ListenAndServe(":8081", router)
 
   log.Fatal(server)
-  */
+
 }

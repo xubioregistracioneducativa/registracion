@@ -41,3 +41,7 @@ func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) 
 
 	  return nil
 }
+
+func (estado estadoAprobado ) consultarEstado () string {
+	return fmt.Sprint("Esta registracion ya fue aprobada por nuestro equipo y esperamos la confirmacion de tu profesor")
+}

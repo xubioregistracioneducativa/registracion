@@ -16,6 +16,7 @@ type estado interface {
   rechazarPorCS(*Registracion) error
   aceptarPorCS(*Registracion) error
   confirmarPorProfesor(*Registracion) error
+  consultarEstado() string
 }
 
 func nuevoEstado (idEstado estadoID) (estado, error) {
