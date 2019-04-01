@@ -33,6 +33,10 @@ func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion
   return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }
 
+func (estado estadoInicioRegistracion ) anularPorCS (registracion *Registracion) error {
+	return errors.New("Esta registracion ya esta vencida, por lo tanto no puede anularse")
+}
+
 func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) error{
   return errors.New("Esta registracion aun no fue completada o fue rechazada anteriormente")
 }

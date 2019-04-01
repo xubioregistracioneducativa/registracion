@@ -67,6 +67,8 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
       err = estado.aceptarPorCS(&registracion)
     case "RechazarCS":
       err = estado.rechazarPorCS(&registracion)
+	case "AnularCS":
+		err = estado.anularPorCS(&registracion)
     case "ConfirmarProfesor":
       err = estado.confirmarPorProfesor(&registracion)
 	case "ConsultarEstado":

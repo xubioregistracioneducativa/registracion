@@ -10,10 +10,9 @@ type estadoAprobado struct {
 }
 
 func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) error {
-	var err error
 	fmt.Println("Se guarda la Registracion")
   	registracion.estado = estadoPendienteAprobacionID
-  	err = reingresarRegistracion(registracion)
+  	err := reingresarRegistracion(registracion)
   	if err != nil {
   		return err
   	}
@@ -27,6 +26,16 @@ func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) error{
 func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) error {
 	  fmt.Println("Se reenvía mail al alumno y al profesor")
 	  return nil
+}
+
+func (estado estadoAprobado ) anularPorCS (registracion *Registracion) error {
+	fmt.Println("Se anula la Registracion")
+	registracion.estado = estadoPendienteAprobacionID
+	err := reingresarRegistracion(registracion)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) error {

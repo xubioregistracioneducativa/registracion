@@ -16,7 +16,7 @@ func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Regi
 func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) error {
   var err error
   fmt.Println("Se reinicia la registracion a 0")
-  registracion.estado = estadoInicioRegistracionID
+  registracion.estado = estadoRechazadoID
   err = updateRegistracion(registracion)
   if err != nil {
     return err
@@ -29,6 +29,16 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   fmt.Println("Se envía mail al alumno y al profesor")
   registracion.estado = estadoAprobadoID
   err = updateRegistracion(registracion)
+  if err != nil {
+    return err
+  }
+  return nil
+}
+
+func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion) error {
+  fmt.Println("Se anula la Registracion")
+  registracion.estado = estadoAnuladoID
+  err := reingresarRegistracion(registracion)
   if err != nil {
     return err
   }
