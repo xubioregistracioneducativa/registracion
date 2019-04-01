@@ -28,6 +28,12 @@ func newRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
+		"VencerRegistracion",
+		"GET",
+		"/VencerRegistracion/{email}/Mkj0WEW1iWJvJGKWXAWG8HkWng4R0maRwxNl2_QOpu8=",
+		VencerRegistracion,
+	},
+	Route{
 		"ModificarRegistracion",
 		"GET",
 		"/{input}/{id}/{validationCode}",

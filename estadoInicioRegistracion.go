@@ -44,3 +44,7 @@ func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Regi
 func (estado estadoInicioRegistracion ) consultarEstado () string {
 	return fmt.Sprint("Esta registracion se encuentra en el inicio de registracion")
 }
+
+func (estado estadoInicioRegistracion ) vencerRegistracion (registracion *Registracion) error{
+	return errors.New("No se puede vencer una registracion que no esta completa")
+}

@@ -52,3 +52,7 @@ func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Reg
 func (estado estadoPendienteAprobacion ) consultarEstado () string {
   return fmt.Sprint("Esta registracion se encuentra pendiente de aprobacion por nuestro equipo")
 }
+
+func (estado estadoPendienteAprobacion ) vencerRegistracion (registracion *Registracion) error{
+  return errors.New("No se puede vencer una registracion que no esta completa")
+}

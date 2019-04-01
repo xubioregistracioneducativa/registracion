@@ -44,3 +44,7 @@ func (estado estadoAnulado ) confirmarPorProfesor (registracion *Registracion) e
 func (estado estadoAnulado ) consultarEstado () string {
 	return fmt.Sprint("Esta registracion fue anulada por nuestro equipo, puede volver a cargar una nueva registracion")
 }
+
+func (estado estadoAnulado ) vencerRegistracion (registracion *Registracion) error{
+	return errors.New("No se puede vencer una registracion que no esta completa")
+}

@@ -33,3 +33,13 @@ func (estado estadoConfirmado ) confirmarPorProfesor (registracion *Registracion
 func (estado estadoConfirmado ) consultarEstado () string {
 	return fmt.Sprint("Esta registracion ya fue completada, podes entrar a Xubio.com e ingresar con tu email y contraseña")
 }
+
+func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) error{
+	fmt.Println("Se guarda la Registracion")
+	registracion.estado = estadoInicioRegistracionID
+	err := reingresarRegistracion(registracion)
+	if err != nil {
+		return err
+	}
+	return nil
+}

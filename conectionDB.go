@@ -194,6 +194,30 @@ func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 	return registracion, nil
 }
 
+func obtenerRegistracionPorEmail(email string) (Registracion, error){
+	var registracion Registracion
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `select * from xreregistracion where email = $1;`
+
+	err = db.QueryRow(sqlStatement, email).Scan(&registracion.IDRegistracion, &registracion.Nombre, &registracion.Apellido, &registracion.Email, &registracion.Telefono, &registracion.Carrera, &registracion.Clave,
+		&registracion.NombreProfesor, &registracion.ApellidoProfesor, &registracion.EmailProfesor, &registracion.Materia, &registracion.Catedra, &registracion.Facultad, &registracion.Universidad, &registracion.estado)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return registracion , errors.New("SQL: No se encontraron registraciones con ese email")
+		}
+		return registracion, err
+	}
+
+	return registracion, nil
+}
+
 func obtenerEstadoIDPorEmail(email string) (estadoID, error){
 
 	var estado estadoID

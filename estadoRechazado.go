@@ -44,3 +44,7 @@ func (estado estadoRechazado ) confirmarPorProfesor (registracion *Registracion)
 func (estado estadoRechazado ) consultarEstado () string {
 	return fmt.Sprint("Esta registracion fue rechazada, puede volver a cargar una nueva registracion")
 }
+
+func (estado estadoRechazado ) vencerRegistracion (registracion *Registracion) error{
+	return errors.New("No se puede vencer una registracion que no esta completa")
+}
