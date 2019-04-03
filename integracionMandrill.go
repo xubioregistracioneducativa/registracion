@@ -4,7 +4,7 @@ import (
 	"github.com/mattbaird/gochimp"
 )
 
-
+//ENVIAR UN MAIL GENERAL (CANDIDATO A SER UN PACKAGE APARTE QUE SE ENCARGUE DE LOS MAILS)
 
 func enviarMail(email string, asunto string, html string) error {
 	//apiKey := os.Getenv("MANDRILL_KEY")
@@ -37,6 +37,37 @@ func enviarMail(email string, asunto string, html string) error {
 	return nil
 }
 
+//PARA LOS BOTONES DE LOS LINKS
+
+func getButton(value string , link string ) string {
+	var button = "<table>"
+	button += "<tr>"
+	button += "<a href=\"" + link + "\""
+	button += "<td align=\"center\" width=\"250\" height=\"20\" bgcolor=\"#cf142b\""
+	button += "style=\"font-weight: 700; font-family: 'Open Sans', Arial, Helvetica, sans-serif; "
+	button += "font-size: 14px; margin-top: 5px;	padding: 7px 31px;	text-transform: uppercase;	"
+	button += "display: block;	margin: 25px auto 0px auto;	text-transform: uppercase;  border-bottom: 3px solid #005e86;  "
+	button += "border-top: 0;  border-right: 0;  border-left: 0;  text-decoration: none;  background-color: #f4f4f4; "
+	button += "border-radius: 4px !important;  min-width: 55px;  color: #FFF;  background: #0193e1; "
+	button += "background: -moz-linear-gradient(top, #00abeb 0%, #027cd8 100%); "
+	button += "background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2da9dc ), color-stop(100%,#027cd8)); "
+	button += "background: -webkit-linear-gradient(top, #00abeb 0%,#027cd8 100%); background: -o-linear-gradient(top, #00abeb 0%,#027cd8 100%); "
+	button += "background: -ms-linear-gradient(top, #00abeb 0%,#027cd8 100%); background: linear-gradient(to bottom, #00abeb 0%,#027cd8 100%); "
+	button += "filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00abeb ', endColorstr='#027cd8',GradientType=0 ); "
+	button += "border: 1px solid #00abeb !important;  box-sizing: initial;\">"
+	button += value + "</td>"
+	button += "</a>"
+	button += "</tr>"
+	button += "</table>"
+
+	button += "<div style='font-size: 11px; padding-top: 10px; padding-bottom: 10px;'>"
+	button += "Si el botón no funciona copiá y pegá el siguiente link en tu navegador: <a href=\"" + link + "\">"+link+"</a>"
+	button += "</div>"
+
+	return button;
+}
+
+//MAIL DE INICIO REGISTRACION CS
 
 func enviarMailCS(registracion *Registracion) error{
 	linkAceptado, err := obtenerLink("AceptarCS", registracion.IDRegistracion)
@@ -61,42 +92,10 @@ func enviarMailCS(registracion *Registracion) error{
 	return nil
 }
 
-func enviarMailAlumno(registracion *Registracion) error {
-	linkConsultarEstado, err := obtenerLink("ConsultarEstado", registracion.IDRegistracion)
-	if err != nil {
-		return err
-	}
-	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado))
-	err = enviarMail(registracion.Email, "Bienvenido a Xubio Educativo", cuerpo)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func bienvenidaStudent(registracion *Registracion, linkConsultarEstado string) string{
-	cuerpo := "<h3>¡Bienvenido a Xubio Student!</h3>"
-	cuerpo += "<br>"
-	cuerpo += "Ya recibimos su solicitud y estaremos analizandola en los proximos dias"
-	cuerpo += "<br>"
-	cuerpo += botonesMailAlumno(linkConsultarEstado)
-	return cuerpo
-}
-
 func obtenerCuerpoMailCS(registracion *Registracion, linkAceptado string, linkRechazado string, linkAnulado string ) string {
-	cuerpo := mostrarDatosAlumno(registracion)
+	cuerpo := mostrarDatosRegistracion(registracion)
 	cuerpo += botonesMailCS(linkAceptado, linkRechazado, linkAnulado)
 	return cuerpo
-}
-
-
-func mostrarDatosAlumno(registracion *Registracion) string {
-	var result = "El alumno " + registracion.Apellido + ", " + registracion.Nombre
-	result += " con email " + registracion.Email
-	result += " indico que es su alumno en la materia " + registracion.Materia + " de la catedra " + registracion.Catedra + " en la carrera " + registracion.Carrera
-	result += " para ingresar al programa de Xubio Estudiantil, que permite que acceda a una cuenta premium de Xubio por un año"
-	result += "<br><br>"
-	return result
 }
 
 func mostrarDatosRegistracion(registracion *Registracion) string {
@@ -133,26 +132,6 @@ func mostrarDatosRegistracion(registracion *Registracion) string {
 	return result
 }
 
-func botonesMailAlumno(linkConsultarEstado string) string {
-	var result = "Haga click en Consultar Estado para consultar el estado de su Registracion en cualquier momento"
-	result += "<br>"
-	result += getButton("Consultar Estado", linkConsultarEstado)
-	result += "<br><br>"
-	result += "Muchas gracias!"
-	return  result
-}
-
-func obtenerMailProfesor(linkConfirmado string) string {
-	var result = "Haga click en Confirmar Alumno para confirmar que este es su alumno y darle acceso a Xubio con una cuenta de estudiante"
-	result += "<br>"
-	result += getButton("Confirmar Alumno", linkConfirmado)
-	result += "<br>"
-	result += "En caso de que no sea su alumno, ignore este mensaje."
-	result += "<br><br>"
-	result += "Muchas gracias!"
-	return result
-}
-
 func botonesMailCS(linkAceptado string, linkRechazado string, linkAnulado string ) string {
 	var result = "Haga click en Aceptar Registracion para verificar que el profesor es válido y enviarle el mail de confirmacion"
 	result += "<br>"
@@ -170,30 +149,135 @@ func botonesMailCS(linkAceptado string, linkRechazado string, linkAnulado string
 	return result;
 }
 
-func getButton(value string , link string ) string {
-	var button = "<table>"
-	button += "<tr>"
-	button += "<a href=\"" + link + "\""
-	button += "<td align=\"center\" width=\"250\" height=\"20\" bgcolor=\"#cf142b\""
-	button += "style=\"font-weight: 700; font-family: 'Open Sans', Arial, Helvetica, sans-serif; "
-	button += "font-size: 14px; margin-top: 5px;	padding: 7px 31px;	text-transform: uppercase;	"
-	button += "display: block;	margin: 25px auto 0px auto;	text-transform: uppercase;  border-bottom: 3px solid #005e86;  "
-	button += "border-top: 0;  border-right: 0;  border-left: 0;  text-decoration: none;  background-color: #f4f4f4; "
-	button += "border-radius: 4px !important;  min-width: 55px;  color: #FFF;  background: #0193e1; "
-	button += "background: -moz-linear-gradient(top, #00abeb 0%, #027cd8 100%); "
-	button += "background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2da9dc ), color-stop(100%,#027cd8)); "
-	button += "background: -webkit-linear-gradient(top, #00abeb 0%,#027cd8 100%); background: -o-linear-gradient(top, #00abeb 0%,#027cd8 100%); "
-	button += "background: -ms-linear-gradient(top, #00abeb 0%,#027cd8 100%); background: linear-gradient(to bottom, #00abeb 0%,#027cd8 100%); "
-	button += "filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00abeb ', endColorstr='#027cd8',GradientType=0 ); "
-	button += "border: 1px solid #00abeb !important;  box-sizing: initial;\">"
-	button += value + "</td>"
-	button += "</a>"
-	button += "</tr>"
-	button += "</table>"
+//MAIL DE INICIO REGISTRACION ALUMNO
 
-	button += "<div style='font-size: 11px; padding-top: 10px; padding-bottom: 10px;'>"
-	button += "Si el botón no funciona copiá y pegá el siguiente link en tu navegador: <a href=\"" + link + "\">"+link+"</a>"
-	button += "</div>"
+func enviarMailBienvenidaAlumno(registracion *Registracion) error {
+	linkConsultarEstado, err := obtenerLink("ConsultarEstado", registracion.IDRegistracion)
+	if err != nil {
+		return err
+	}
+	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado))
+	err = enviarMail(registracion.Email, "Bienvenido a Xubio Educativo", cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func bienvenidaStudent(registracion *Registracion, linkConsultarEstado string) string{
+	cuerpo := "<h3>¡Bienvenido a Xubio Student!</h3>"
+	cuerpo += "<br>"
+	cuerpo += "Ya recibimos su solicitud y estaremos analizandola en los proximos dias."
+	cuerpo += "<br><br>"
+	cuerpo += botonesMailAlumno(linkConsultarEstado)
+	return cuerpo
+}
 
-	return button;
+func botonesMailAlumno(linkConsultarEstado string) string {
+	var result = "Haga click en Consultar Estado para consultar el estado de su Registracion en cualquier momento"
+	result += "<br>"
+	result += getButton("Consultar Estado", linkConsultarEstado)
+	result += "<br><br>"
+	result += "Muchas gracias!"
+	return  result
+}
+
+//MAIL DE RECHAZO
+
+func enviarMailRechazoAlumno(registracion *Registracion) error {
+
+	cuerpo := mailDeRechazoAlumnos()
+	err := enviarMail(registracion.Email, "Su Registracion educativa fue rechazada", cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func mailDeRechazoAlumnos() string{
+	cuerpo := "Tu registracion ha sido rechazada por el equipo de Xubio por no poder corroborar los datos enviados."
+	cuerpo += "Podes reintentar usando otro profesor en:"
+	cuerpo += getButton("Xubio Educativo","www.xubio.com/educativo/NuevaRegistracion" )
+	return cuerpo
+}
+
+//MAIL A PROFESOR
+
+func enviarMailProfesor(registracion *Registracion) error {
+
+	linkConfirmado, err := obtenerLink("ConfirmarProfesor", registracion.IDRegistracion)
+	if err != nil {
+		return err
+	}
+	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado))
+	err = enviarMail(registracion.EmailProfesor, "Un alumno suyo quiere una cuenta educativa en Xubio", cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func mailProfesor(registracion *Registracion, linkConfirmado string) string{
+	cuerpo := mostrarDatosAlumno(registracion)
+	cuerpo += BotonesMailProfesor(linkConfirmado)
+	return cuerpo
+}
+
+func mostrarDatosAlumno(registracion *Registracion) string {
+	var result = "El alumno " + registracion.Apellido + ", " + registracion.Nombre
+	result += " con email " + registracion.Email
+	result += " indico que es su alumno en la materia " + registracion.Materia + " de la catedra " + registracion.Catedra + " en la carrera " + registracion.Carrera
+	result += " para ingresar al programa de Xubio Estudiantil, que permite que acceda a una cuenta premium de Xubio por un año"
+	result += "<br><br>"
+	return result
+}
+
+func BotonesMailProfesor(linkConfirmado string) string {
+	var result = "Haga click en Confirmar Alumno para confirmar que este es su alumno y darle acceso a Xubio con una cuenta de estudiante"
+	result += "<br>"
+	result += getButton("Confirmar Alumno", linkConfirmado)
+	result += "<br>"
+	result += "En caso de que no sea su alumno, ignore este mensaje."
+	result += "<br><br>"
+	result += "Muchas gracias!"
+	return result
+}
+
+//MAIL DE ANULACION
+
+func enviarMailAnulacionAlumno(registracion *Registracion) error {
+
+	cuerpo := mailDeAnulacionAlumnos()
+	err := enviarMail(registracion.Email, "Su Registracion educativa fue anulada", cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func mailDeAnulacionAlumnos() string{
+	cuerpo := "Tu registracion ha sido anulada porque tu profesor no confirmó tu registracion."
+	cuerpo += "Podes reintentar la registracion en:"
+	cuerpo += getButton("Xubio Educativo","www.xubio.com/educativo/NuevaRegistracion" )
+	return cuerpo
+}
+
+//MAIL REGISTRACION
+
+func enviarMailRegistracionAlumno(registracion *Registracion) error {
+
+	cuerpo := mailDeRegistracionAlumnos()
+	err := enviarMail(registracion.Email, "Su cuenta en Xubio Educativo fue aceptada", cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func mailDeRegistracionAlumnos() string {
+	cuerpo := "Tu registracion ha sido exitosa."
+	cuerpo += "Ingresa con tu email y contraseña en "
+	cuerpo += getButton("Xubio", "www.xubio.com/")
+	cuerpo += "<br><br>"
+	cuerpo += "En el caso que no recuerdes tu contraseña, podes recuperarla usando Recuperar contraseña. "
+	return cuerpo
 }

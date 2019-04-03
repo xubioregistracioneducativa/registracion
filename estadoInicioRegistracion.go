@@ -21,26 +21,6 @@ func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Regis
 	if err != nil {
 		return err
 	}
-	err = eliminarLinksPorID(registracion.IDRegistracion)
-
-	if err != nil {
-		return err
-	}
-
-	err = generarLinks(registracion.IDRegistracion, registracion.Email)
-
-	if err != nil {
-		return err
-	}
-
-	err = enviarMailAlumno(registracion)
-	if err != nil {
-		return err
-	}
-	err = enviarMailCS(registracion)
-	if err != nil {
-		return err
-	}
 
   	return nil
 }

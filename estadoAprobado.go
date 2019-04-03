@@ -16,7 +16,7 @@ func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) e
   	if err != nil {
   		return err
   	}
-  	return nil
+	return nil
 }
 
 func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) error{
@@ -35,20 +35,28 @@ func (estado estadoAprobado ) anularPorCS (registracion *Registracion) error {
 	if err != nil {
 		return err
 	}
+	err = enviarMailAnulacionAlumno(registracion)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) error {
-	  var err error
-	  fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
-	  registrarTenant(registracion)
-	  registracion.estado = estadoConfirmadoID
-	  err = updateRegistracion(registracion)
-	  if err != nil {
-			return err
-	  }
+	var err error
+	fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
+	registrarTenant(registracion)
+	registracion.estado = estadoConfirmadoID
+	err = updateRegistracion(registracion)
+	if err != nil {
+		return err
+	}
+	err = enviarMailRegistracionAlumno(registracion)
+	if err != nil {
+		return err
+	}
 
-	  return nil
+	return nil
 }
 
 func (estado estadoAprobado ) consultarEstado () string {

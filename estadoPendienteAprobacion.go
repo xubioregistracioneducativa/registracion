@@ -21,6 +21,10 @@ func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registraci
   if err != nil {
     return err
   }
+  err = enviarMailRechazoAlumno(registracion)
+  if err != nil {
+    return err
+  }
   return nil
 }
 
@@ -32,6 +36,10 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   if err != nil {
     return err
   }
+  err = enviarMailProfesor(registracion)
+  if err != nil {
+    return err
+  }
   return nil
 }
 
@@ -39,6 +47,10 @@ func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion
   fmt.Println("Se anula la Registracion")
   registracion.estado = estadoAnuladoID
   err := reingresarRegistracion(registracion)
+  if err != nil {
+    return err
+  }
+  err = enviarMailAnulacionAlumno(registracion)
   if err != nil {
     return err
   }
