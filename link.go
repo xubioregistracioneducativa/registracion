@@ -4,10 +4,8 @@ import (
   "fmt"
 )
 
-type Url string
-
 type Link struct {
-  Url             Url    	    `json:"Url"`
+  Url             string    	    `json:"Url"`
   Input           string   	    `json:"Input"`
   ValidationCode  string        `json:"ValidationCode"`
   RegistracionID  int    		`json:"RegistracionID"`
@@ -61,8 +59,13 @@ func generarLinkEmail(input string, email string, validationCode string, registr
   return nil
 }
 
-func obtenerUrl(input string, identificador string, validationCode string) Url {
+func obtenerUrl(input string, identificador string, validationCode string) string {
   paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
-  return Url(fmt.Sprintf("%s/%s/%s/%s", paginaBase, input, identificador, validationCode))
+  return fmt.Sprintf("%s/%s/%s/%s", paginaBase, input, identificador, validationCode)
+}
+
+func obtenerUrlLink(link *Link) string {
+  paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
+  return fmt.Sprintf("%s/%s/%d/%s", paginaBase, link.Input, link.RegistracionID, link.ValidationCode)
 }
 

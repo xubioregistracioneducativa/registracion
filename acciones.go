@@ -93,33 +93,20 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-    estado, err := nuevoEstado(datosRegistracion.estado)
-
-    if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-    err = estado.ingresarNuevosDatos(&datosRegistracion)
-
-    if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	err = eliminarLinksPorID(datosRegistracion.IDRegistracion)
+	estado, err := nuevoEstado(datosRegistracion.estado)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	err = generarLinks(datosRegistracion.IDRegistracion, datosRegistracion.Email)
+	err = estado.ingresarNuevosDatos(&datosRegistracion)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
+
 	responderJSON(writer, 201, datosRegistracion)
 
 }

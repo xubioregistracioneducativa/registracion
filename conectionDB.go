@@ -267,7 +267,7 @@ func insertarNuevoLink(link *Link) error {
 	return nil
 }
 
-func eliminarLink(url Url) error {
+func eliminarLink(url string) error {
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		return err
@@ -291,7 +291,7 @@ func eliminarLink(url Url) error {
 	return nil
 }
 
-func obtenerLinkPorUrl(url Url) (Link, error){
+func obtenerLinkPorUrl(url string) (Link, error){
 	var link Link
 
 	db, err := sql.Open("postgres", psqlInfo)
@@ -335,4 +335,27 @@ func eliminarLinksPorID(IDRegistracion int) error {
 	}
 	tx.Commit()
 	return nil
+}
+
+func obtenerLink(input string, idregistracion int) (Link, error) {
+	var link Link
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return link, err
+	}
+	defer db.Close()
+
+	sqlStatement := `select * from xrelink where input = $1 and idregistracion = $2;`
+
+	err = db.QueryRow(sqlStatement, input, idregistracion).Scan(&link.Url,&link.Input, &link.ValidationCode, &link.RegistracionID)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return link , errors.New("El link no es valido")
+		}
+		return link, err
+	}
+
+	return link, nil
 }

@@ -17,7 +17,6 @@ func main() {
   //var registracion *Registracion
   //registrarTenant(registracion)
 
-
   router := newRouter()
   
   fmt.Println("Se empieza a escuchar el puerto")
