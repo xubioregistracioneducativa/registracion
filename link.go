@@ -3,6 +3,7 @@ package main
 import (
   "errors"
   "fmt"
+  "github.com/xubioregistracioneducativa/registracion/configuracion"
 )
 
 type Link struct {
@@ -48,10 +49,7 @@ func generarLink(registracionID int, accion string, validationCode string) error
   return nil
 }
 
-func obtenerUrlLink(link *Link, email string) string {
-  paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
-  return fmt.Sprintf("%s/%s/%s/%s", paginaBase, link.Accion, email, link.ValidationCode)
-}
+
 
 func validarLink(registracionID int, accion string, validationCode string) error {
   link, err := obtenerLink(registracionID, accion)
@@ -64,3 +62,10 @@ func validarLink(registracionID int, accion string, validationCode string) error
   return nil
 }
 
+func obtenerUrlLink(link *Link, email string) string {
+  return fmt.Sprintf("%s/%s/%s/%s", configuracion.UrlStudent(), link.Accion, email, link.ValidationCode)
+}
+
+func obtenerUrlXubioNuevaRegistracion() string {
+  return fmt.Sprintf("%s/%s", configuracion.UrlStudent(), "NuevaRegistracion")
+}

@@ -40,6 +40,10 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   if err != nil {
     return err
   }
+  err = enviarMailAceptacionAlumno(registracion)
+  if err != nil {
+    return err
+  }
   return nil
 }
 

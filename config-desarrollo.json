@@ -1,0 +1,6 @@
+{
+  "puerto": ":8081",
+  "urlMono": "https://localhost:8443/",
+  "urlStudent": "https://localhost:8081/",
+  "emailPrueba": "sebastian.taka@hotmail.com"
+}
