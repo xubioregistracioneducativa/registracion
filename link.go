@@ -1,23 +1,24 @@
 package main
 
 import (
+  "errors"
   "fmt"
 )
 
 type Link struct {
-  Url             string    	    `json:"Url"`
-  Input           string   	    `json:"Input"`
-  ValidationCode  string        `json:"ValidationCode"`
   RegistracionID  int    		`json:"RegistracionID"`
+  Accion           string   	`json:"Accion"`
+  ValidationCode  string        `json:"ValidationCode"`
+
 }
 
-func generarLinks(registracionID int, email string) error {
-  err := generarLinkRandom("AceptarCS", registracionID)
-  err = generarLinkRandom("RechazarCS", registracionID)
-  err = generarLinkRandom("ConfirmarProfesor", registracionID)
-  err = generarLinkRandom("ConsultarEstado", registracionID)
-  err = generarLinkRandom("AnularCS", registracionID)
-  err = generarLinkEmail("VencerRegistracion", email, "Mkj0WEW1iWJvJGKWXAWG8HkWng4R0maRwxNl2_QOpu8=", registracionID)
+func generarLinks(registracionID int) error {
+  err := generarLinkRandom(registracionID, "AceptarCS")
+  err = generarLinkRandom(registracionID, "RechazarCS")
+  err = generarLinkRandom(registracionID, "ConfirmarProfesor")
+  err = generarLinkRandom(registracionID, "ConsultarEstado")
+  err = generarLinkRandom(registracionID, "AnularCS")
+  err = generarLink(registracionID, "VencerRegistracion", "Mkj0WEW1iWJvJGKWXAWG8HkWng4R0maRwxNl2_QOpu8=")
   if err != nil {
     return err
   }
@@ -25,22 +26,21 @@ func generarLinks(registracionID int, email string) error {
 
 }
 
-func generarLinkRandom(input string, registracionID int) error {
+func generarLinkRandom(registracionID int, accion string) error {
   validationCode, err := GenerateRandomString(32)
   if err != nil {
     return err
   }
-  err = generarLink(input, registracionID, validationCode)
+  err = generarLink(registracionID, accion, validationCode)
   if err != nil {
     return err
   }
   return nil
 }
 
-func generarLink(input string, registracionID int, validationCode string) error{
+func generarLink(registracionID int, accion string, validationCode string) error{
 
-  url := obtenerUrl(input, fmt.Sprint(registracionID), validationCode)
-  link := Link{url, input, validationCode, registracionID}
+  link := Link{registracionID, accion, validationCode}
   err := insertarNuevoLink(&link)
   if err != nil {
     return err
@@ -48,24 +48,19 @@ func generarLink(input string, registracionID int, validationCode string) error{
   return nil
 }
 
-func generarLinkEmail(input string, email string, validationCode string, registracionID int) error{
+func obtenerUrlLink(link *Link, email string) string {
+  paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
+  return fmt.Sprintf("%s/%s/%s/%s", paginaBase, link.Accion, email, link.ValidationCode)
+}
 
-  url := obtenerUrl(input, email, validationCode)
-  link := Link{url, input, validationCode, registracionID}
-  err := insertarNuevoLink(&link)
+func validarLink(registracionID int, accion string, validationCode string) error {
+  link, err := obtenerLink(registracionID, accion)
   if err != nil {
     return err
   }
+  if link.ValidationCode != validationCode {
+    return errors.New("El codigo de validacion es incorrecto")
+  }
   return nil
-}
-
-func obtenerUrl(input string, identificador string, validationCode string) string {
-  paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
-  return fmt.Sprintf("%s/%s/%s/%s", paginaBase, input, identificador, validationCode)
-}
-
-func obtenerUrlLink(link *Link) string {
-  paginaBase := "http://localhost:8081" //Como obtener esto dinamicamente?
-  return fmt.Sprintf("%s/%s/%d/%s", paginaBase, link.Input, link.RegistracionID, link.ValidationCode)
 }
 

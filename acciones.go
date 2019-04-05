@@ -33,14 +33,14 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	params := mux.Vars(request)
 
-	link, err := obtenerLinkPorUrl(obtenerUrl(params["input"], params["id"], params["validationCode"]))
+	registracion, err := obtenerRegistracionPorEmail(params["email"])
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	registracion, err := obtenerRegistracionPorID(link.RegistracionID)
+	err = validarLink(registracion.IDRegistracion, params["accion"], params["validationCode"]);
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
@@ -54,7 +54,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 	
-	switch(link.Input) {
+	switch(params["accion"]) {
     case "AceptarCS":
       err = estado.aceptarPorCS(&registracion)
     case "RechazarCS":
@@ -67,6 +67,8 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		mensajeEstado := estado.consultarEstado()
 		responderJSON(writer, 202, mensajeEstado)
 		return
+	case "VencerRegistracion":
+		err = estado.vencerRegistracion(&registracion)
     default:
     	responderError(writer, 400, "No se reconoce el input")
 		return
@@ -114,7 +116,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	err = generarLinks(datosRegistracion.IDRegistracion, datosRegistracion.Email)
+	err = generarLinks(datosRegistracion.IDRegistracion)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
@@ -136,39 +138,4 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 }
 
-func VencerRegistracion(writer http.ResponseWriter, request *http.Request){
-
-	params := mux.Vars(request)
-
-	registracion, err := obtenerRegistracionPorEmail(params["email"])
-
-	if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	_ , err = obtenerLinkPorUrl(obtenerUrl("VencerRegistracion", registracion.Email, "Mkj0WEW1iWJvJGKWXAWG8HkWng4R0maRwxNl2_QOpu8="))
-
-	if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	estado, err := nuevoEstado(registracion.estado)
-
-	if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	err = estado.vencerRegistracion(&registracion)
-
-	if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	responderJSON(writer, 202, registracion)
-
-}
 

@@ -49,7 +49,7 @@ func CrearTablaXRELink(){
 	defer db.Close()
 
 	sqlStatement := `CREATE TABLE IF NOT EXISTS XRELink 
-	(Url VARCHAR PRIMARY KEY, input VARCHAR, ValidationCode VARCHAR, IDRegistracion INT REFERENCES xreregistracion);`
+	(IDRegistracion INT REFERENCES xreregistracion, accion VARCHAR, ValidationCode VARCHAR, primary key(accion, IDRegistracion));`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
 		panic(err)
@@ -254,64 +254,17 @@ func insertarNuevoLink(link *Link) error {
 		return err
 	}
 
-	sqlStatement := `INSERT INTO XRELink (Url, Input, ValidationCode, idregistracion)
-	 VALUES ($1, $2, $3, $4)`
+	sqlStatement := `INSERT INTO XRELink (idregistracion, Accion, ValidationCode)
+	 VALUES ($1, $2, $3)`
 
-	_ , err = tx.Exec(sqlStatement, link.Url, link.Input, link.ValidationCode, link.RegistracionID)
+	_ , err = tx.Exec(sqlStatement, link.RegistracionID, link.Accion, link.ValidationCode)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 	tx.Commit()
-	fmt.Println("Se inserto el link: ", link.Url)
+	fmt.Println("Se inserto el link.")
 	return nil
-}
-
-func eliminarLink(url string) error {
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	sqlStatement := `DELETE FROM XRELink WHERE url = $1`
-
-	_ , err = tx.Exec(sqlStatement, url)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	tx.Commit()
-	fmt.Println("Se elimino el link: ", url)
-	return nil
-}
-
-func obtenerLinkPorUrl(url string) (Link, error){
-	var link Link
-
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		return link, err
-	}
-	defer db.Close()
-
-	sqlStatement := `select * from xrelink where url = $1;`
-
-	err = db.QueryRow(sqlStatement, url).Scan(&link.Url,&link.Input, &link.ValidationCode, &link.RegistracionID)
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return link , errors.New("El link no es valido")
-		}
-		return link, err
-	}
-
-	return link, nil
 }
 
 func eliminarLinksPorID(IDRegistracion int) error {
@@ -337,7 +290,7 @@ func eliminarLinksPorID(IDRegistracion int) error {
 	return nil
 }
 
-func obtenerLink(input string, idregistracion int) (Link, error) {
+func obtenerLink(idregistracion int, accion string) (Link, error) {
 	var link Link
 
 	db, err := sql.Open("postgres", psqlInfo)
@@ -346,9 +299,9 @@ func obtenerLink(input string, idregistracion int) (Link, error) {
 	}
 	defer db.Close()
 
-	sqlStatement := `select * from xrelink where input = $1 and idregistracion = $2;`
+	sqlStatement := `select * from xrelink where idregistracion = $1 and accion = $2;`
 
-	err = db.QueryRow(sqlStatement, input, idregistracion).Scan(&link.Url,&link.Input, &link.ValidationCode, &link.RegistracionID)
+	err = db.QueryRow(sqlStatement, idregistracion, accion).Scan(&link.RegistracionID, &link.Accion, &link.ValidationCode)
 
 	if err != nil {
 		if err == sql.ErrNoRows {

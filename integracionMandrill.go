@@ -70,20 +70,20 @@ func getButton(value string , link string ) string {
 //MAIL DE INICIO REGISTRACION CS
 
 func enviarMailCS(registracion *Registracion) error{
-	linkAceptado, err := obtenerLink("AceptarCS", registracion.IDRegistracion)
+	linkAceptado, err := obtenerLink(registracion.IDRegistracion, "AceptarCS")
 	if err != nil {
 		return err
 	}
-	linkRechazado, err := obtenerLink("RechazarCS", registracion.IDRegistracion)
+	linkRechazado, err := obtenerLink(registracion.IDRegistracion, "RechazarCS")
 	if err != nil {
 		return err
 	}
-	linkAnulado, err := obtenerLink("AnularCS", registracion.IDRegistracion)
+	linkAnulado, err := obtenerLink(registracion.IDRegistracion, "AnularCS")
 	if err != nil {
 		return err
 	}
 
-	cuerpo := obtenerCuerpoMailCS(registracion, obtenerUrlLink(&linkAceptado), obtenerUrlLink(&linkRechazado), obtenerUrlLink(&linkAnulado))
+	cuerpo := obtenerCuerpoMailCS(registracion, obtenerUrlLink(&linkAceptado, registracion.Email), obtenerUrlLink(&linkRechazado, registracion.Email), obtenerUrlLink(&linkAnulado, registracion.Email))
 	asunto := "Nueva Registracion Educativa " + registracion.Email
 	err = enviarMail("info@xubio.com", asunto , cuerpo)
 	if err != nil {
@@ -152,11 +152,11 @@ func botonesMailCS(linkAceptado string, linkRechazado string, linkAnulado string
 //MAIL DE INICIO REGISTRACION ALUMNO
 
 func enviarMailBienvenidaAlumno(registracion *Registracion) error {
-	linkConsultarEstado, err := obtenerLink("ConsultarEstado", registracion.IDRegistracion)
+	linkConsultarEstado, err := obtenerLink(registracion.IDRegistracion, "ConsultarEstado")
 	if err != nil {
 		return err
 	}
-	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado))
+	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado, registracion.Email))
 	err = enviarMail(registracion.Email, "Bienvenido a Xubio Educativo", cuerpo)
 	if err != nil {
 		return err
@@ -204,11 +204,11 @@ func mailDeRechazoAlumnos() string{
 
 func enviarMailProfesor(registracion *Registracion) error {
 
-	linkConfirmado, err := obtenerLink("ConfirmarProfesor", registracion.IDRegistracion)
+	linkConfirmado, err := obtenerLink(registracion.IDRegistracion, "ConfirmarProfesor")
 	if err != nil {
 		return err
 	}
-	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado))
+	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado, registracion.Email))
 	err = enviarMail(registracion.EmailProfesor, "Un alumno suyo quiere una cuenta educativa en Xubio", cuerpo)
 	if err != nil {
 		return err
