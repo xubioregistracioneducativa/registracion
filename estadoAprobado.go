@@ -49,7 +49,10 @@ func (estado estadoAprobado ) anularPorCS (registracion *Registracion) error {
 func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) error {
 	var err error
 	fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
-	registrarTenant(registracion)
+	err = registrarTenant(registracion)
+	if err != nil {
+		return err
+	}
 	registracion.estado = estadoConfirmadoID
 	err = updateRegistracion(registracion)
 	if err != nil {

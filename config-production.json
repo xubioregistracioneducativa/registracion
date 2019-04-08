@@ -1,6 +1,6 @@
 {
   "puerto": ":8081",
-  "urlMono": "https://xubiotesting2.ddns.net/ar/",
-  "urlStudent": "https://xubiotesting2.ddns.net/ar/student",
+  "urlMono": "https://xubio.com",
+  "urlStudent": "https://xubio.com/ar/student",
   "emailPrueba": "sebastian.taka@hotmail.com"
 }

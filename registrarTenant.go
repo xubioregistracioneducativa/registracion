@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func registrarTenant(registracion *Registracion) {
+func registrarTenant(registracion *Registracion) error {
 	//Direccion := "http://localhost:8080/NOSecure/PUReceiveFeed"
 	Direccion := "https://localhost:8443/CreateCuenta"
 	//Direccion := "https://xubio.com/CreateCuenta"
@@ -49,7 +49,7 @@ func registrarTenant(registracion *Registracion) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
@@ -57,4 +57,5 @@ func registrarTenant(registracion *Registracion) {
 	fmt.Println("response Headers:", resp.Header)
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
+	return nil
 }

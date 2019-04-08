@@ -37,7 +37,7 @@ func enviarMail(email string, asunto string, html string) error {
 
 
 	if os.Getenv("RECENV") == "D"{
-		fmt.Println(asunto)                              //DEVELOP
+		fmt.Println(asunto)
 	} else { _, err = mandrillApi.MessageSend(message, false) }
 
 
@@ -76,7 +76,7 @@ func getButton(value string , link string ) string {
 	button += "</div>"
 
 
-	if os.Getenv("RECENV") == "P" {
+	if os.Getenv("RECENV") == "D" {
 		fmt.Println(link)
 	}
 

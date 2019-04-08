@@ -5,7 +5,6 @@ import (
   "github.com/xubioregistracioneducativa/registracion/configuracion"
   "log"
   "net/http"
-  "os"
 )
 
 //import "github.com/jinzhu/gorm"
@@ -16,10 +15,6 @@ import (
 
 func main() {
 
-  err := os.Setenv("RECENV", "D")
-  if err != nil {
-    panic(err)
-  }
   configuracion.CargarConfiguracion()
 
 
