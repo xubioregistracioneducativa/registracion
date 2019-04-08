@@ -9,6 +9,7 @@ import (
 
 func verificarDatosValidos(datosRegistracion *DatosRegistracion) error {
 	var err error
+	normalizarDatos(&datosRegistracion.Registracion)
 	err = verificarLeiTerminos(datosRegistracion.LeiTerminos)
 	if err != nil {
 		return err
@@ -71,6 +72,20 @@ func verificarDatosValidos(datosRegistracion *DatosRegistracion) error {
 		return err
 	}
 	return nil
+}
+
+func normalizarDatos(registracion *Registracion){
+	registracion.Email = strings.TrimSpace(strings.ToUpper(registracion.Email))
+	registracion.EmailProfesor = strings.TrimSpace(strings.ToUpper(registracion.EmailProfesor))
+	registracion.ApellidoProfesor = strings.TrimSpace(registracion.ApellidoProfesor)
+	registracion.NombreProfesor = strings.TrimSpace(registracion.NombreProfesor)
+	registracion.Nombre = strings.TrimSpace(registracion.Nombre)
+	registracion.Apellido = strings.TrimSpace(registracion.Apellido)
+	registracion.Catedra = strings.TrimSpace(registracion.Catedra)
+	registracion.Materia = strings.TrimSpace(registracion.Materia)
+	registracion.Carrera = strings.TrimSpace(registracion.Carrera)
+	registracion.Universidad = strings.TrimSpace(registracion.Universidad)
+	registracion.Telefono = strings.TrimSpace(registracion.Telefono)
 }
 
 func verificarCaptcha(captchaValue string) error {
