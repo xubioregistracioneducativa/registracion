@@ -6,11 +6,11 @@ import 	(
 ) 
 
 
-func DecodificarRegistracion(request *http.Request) Registracion {
+func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
 
 	decoder := json.NewDecoder(request.Body)
 	decoder.DisallowUnknownFields ()
-	var datosRegistracion Registracion
+	var datosRegistracion DatosRegistracion
 
 	//&nombre_var para decirle que es la var que no tiene datos y va a tener que rellenar
 	var err = decoder.Decode(&datosRegistracion)

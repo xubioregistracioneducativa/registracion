@@ -86,49 +86,56 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	var err error
 
-	datosRegistracion := DecodificarRegistracion(request)
+	datosRegistracion := DecodificarDatosRegistracion(request)
 
-	datosRegistracion.estado, err = obtenerEstadoIDPorEmail(datosRegistracion.Email)
-
-	if err != nil {
-		responderError(writer, 400, err.Error())
-		return
-	}
-
-	estado, err := nuevoEstado(datosRegistracion.estado)
+	err = verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	err = estado.ingresarNuevosDatos(&datosRegistracion)
+	datosRegistracion.Registracion.estado, err = obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	err = eliminarLinksPorID(datosRegistracion.IDRegistracion)
+	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	err = generarLinks(datosRegistracion.IDRegistracion)
+	err = estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
 
-	err = enviarMailBienvenidaAlumno(&datosRegistracion)
+	err = eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
+
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
 	}
-	err = enviarMailCS(&datosRegistracion)
+
+	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
+
+	if err != nil {
+		responderError(writer, 400, err.Error())
+		return
+	}
+
+	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
+	if err != nil {
+		responderError(writer, 400, err.Error())
+		return
+	}
+	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
 		responderError(writer, 400, err.Error())
 		return
@@ -137,5 +144,6 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 	responderJSON(writer, 201, datosRegistracion)
 
 }
+
 
 

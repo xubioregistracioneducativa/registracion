@@ -12,6 +12,7 @@ type ConfiguracionStruct struct {
 	UrlMono string			`json:"urlMono"`
 	UrlStudent string		`json:"urlStudent"`
 	EmailPrueba string		`json:"emailPrueba"`
+	ValidaCaptcha bool	`json:"validaCaptcha"`
 }
 
 var configuracion ConfiguracionStruct
@@ -57,3 +58,8 @@ func UrlStudent() string{
 func EmailPrueba() string {
 	return configuracion.EmailPrueba
 }
+
+func ValidaCaptcha() bool {
+	return configuracion.ValidaCaptcha
+}
+

@@ -2,5 +2,6 @@
   "puerto": ":8081",
   "urlMono": "https://xubio.com",
   "urlStudent": "https://xubio.com/ar/student",
-  "emailPrueba": "sebastian.taka@hotmail.com"
+  "emailPrueba": "sebastian.taka@hotmail.com",
+  "validaCaptcha": true
 }

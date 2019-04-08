@@ -2,5 +2,6 @@
   "puerto": ":8081",
   "urlMono": "http://localhost:8443",
   "urlStudent": "http://localhost:8081",
-  "emailPrueba": "sebastian.taka@hotmail.com"
+  "emailPrueba": "sebastian.taka@hotmail.com",
+  "validaCaptcha": false
 }

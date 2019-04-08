@@ -69,3 +69,7 @@ func obtenerUrlLink(link *Link, email string) string {
 func obtenerUrlXubioNuevaRegistracion() string {
   return fmt.Sprintf("%s/%s", configuracion.UrlStudent(), "NuevaRegistracion")
 }
+
+func obtenerUrlRegistracionIngresada() string {
+  return fmt.Sprintf("%s/%s", configuracion.UrlStudent(), "SolicitudIngresada")
+}

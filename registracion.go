@@ -1,5 +1,11 @@
 package main
 
+type DatosRegistracion struct {
+  LeiTerminos bool `json:"LeiTerminos"`
+  CaptchaValue string `json:"CaptchaValue"`
+  Registracion Registracion `json:"Registracion"`
+}
+
 type Registracion struct {
   IDRegistracion int    	`json:"IDRegistracion"`
   Nombre       string   	`json:"Nombre"`
