@@ -38,8 +38,10 @@ func enviarMail(email string, asunto string, html string) error {
 
 	if os.Getenv("RECENV") == "D"{
 		fmt.Println(asunto)
-	} else { _, err = mandrillApi.MessageSend(message, false) }
-
+	}
+	if configuracion.EnviaEmails(){
+		_, err = mandrillApi.MessageSend(message, false)
+	}
 
 	if err != nil {
 		return err

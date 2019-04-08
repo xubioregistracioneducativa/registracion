@@ -2,6 +2,7 @@
   "puerto": ":8081",
   "urlMono": "https://xubiotesting2.ddns.net/ar",
   "urlStudent": "https://xubiotesting2.ddns.net/ar/student",
+  "enviaEmails": true,
   "emailPrueba": "sebastian.taka@hotmail.com",
   "validaCaptcha": true
 }

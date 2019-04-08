@@ -11,6 +11,7 @@ type ConfiguracionStruct struct {
 	Puerto string			`json:"puerto"`
 	UrlMono string			`json:"urlMono"`
 	UrlStudent string		`json:"urlStudent"`
+	EnviaEmails	bool		`json:"enviaEmails"`
 	EmailPrueba string		`json:"emailPrueba"`
 	ValidaCaptcha bool	`json:"validaCaptcha"`
 }
@@ -63,3 +64,7 @@ func ValidaCaptcha() bool {
 	return configuracion.ValidaCaptcha
 }
 
+func EnviaEmails() bool {
+	return configuracion.EnviaEmails
+
+}

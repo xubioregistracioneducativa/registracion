@@ -2,6 +2,7 @@
   "puerto": ":8081",
   "urlMono": "https://xubio.com",
   "urlStudent": "https://xubio.com/ar/student",
+  "enviaEmails": true,
   "emailPrueba": "sebastian.taka@hotmail.com",
   "validaCaptcha": true
 }
