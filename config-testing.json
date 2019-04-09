@@ -4,5 +4,6 @@
   "urlStudent": "https://xubiotesting2.ddns.net/ar/student",
   "enviaEmails": true,
   "emailPrueba": "sebastian.taka@hotmail.com",
-  "validaCaptcha": true
+  "validaCaptcha": true,
+  "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO"
 }

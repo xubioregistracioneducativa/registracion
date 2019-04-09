@@ -8,12 +8,13 @@ import (
 )
 
 type ConfiguracionStruct struct {
-	Puerto string			`json:"puerto"`
-	UrlMono string			`json:"urlMono"`
-	UrlStudent string		`json:"urlStudent"`
-	EnviaEmails	bool		`json:"enviaEmails"`
-	EmailPrueba string		`json:"emailPrueba"`
-	ValidaCaptcha bool	`json:"validaCaptcha"`
+	Puerto string				`json:"puerto"`
+	UrlMono string				`json:"urlMono"`
+	UrlStudent string			`json:"urlStudent"`
+	EnviaEmails	bool			`json:"enviaEmails"`
+	EmailPrueba string			`json:"emailPrueba"`
+	ValidaCaptcha bool			`json:"validaCaptcha"`
+	CodigoSalteaCaptcha string 	`json:"codigoSalteaCaptcha"`
 }
 
 var configuracion ConfiguracionStruct
@@ -67,4 +68,8 @@ func ValidaCaptcha() bool {
 func EnviaEmails() bool {
 	return configuracion.EnviaEmails
 
+}
+
+func CodigoSalteaCaptcha() string {
+	return configuracion.CodigoSalteaCaptcha
 }

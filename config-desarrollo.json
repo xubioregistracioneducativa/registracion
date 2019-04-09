@@ -4,5 +4,6 @@
   "urlStudent": "http://localhost:8081",
   "enviaEmails": false,
   "emailPrueba": "sebastian.taka@hotmail.com",
-  "validaCaptcha": false
+  "validaCaptcha": false,
+  "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO"
 }

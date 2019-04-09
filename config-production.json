@@ -4,5 +4,6 @@
   "urlStudent": "https://xubio.com/ar/student",
   "enviaEmails": true,
   "emailPrueba": "sebastian.taka@hotmail.com",
-  "validaCaptcha": true
+  "validaCaptcha": true,
+  "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO"
 }
