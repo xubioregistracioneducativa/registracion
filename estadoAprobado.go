@@ -9,67 +9,67 @@ type estadoAprobado struct {
 
 }
 
-func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) error {
+func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
 	fmt.Println("Se guarda la Registracion")
   	registracion.estado = estadoPendienteAprobacionID
   	err := reingresarRegistracion(registracion)
   	if err != nil {
-  		return err
+  		return "", err
   	}
-	return nil
+	return getMensaje("EXITO_INGRESAR"), nil
 }
 
-func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) error{
-  	return errors.New("Esta registracion ya fue aceptada")
+func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) (string, error) {
+  	return "", errors.New(getMensaje("ERROR_APROBADA_RECHAZAR"))
 }
 
-func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) error {
+func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) (string, error)  {
 	  fmt.Println("Se reenvía mail al alumno y al profesor")
 	err := enviarMailProfesorReenviado(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return getMensaje("EXITO_ACEPTAR"), nil
 }
 
-func (estado estadoAprobado ) anularPorCS (registracion *Registracion) error {
+func (estado estadoAprobado ) anularPorCS (registracion *Registracion) (string, error) {
 	fmt.Println("Se anula la Registracion")
 	registracion.estado = estadoAnuladoID
 	err := reingresarRegistracion(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
 	err = enviarMailAnulacionAlumno(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return getMensaje("EXITO_ANULAR"), nil
 }
 
-func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) error {
+func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
 	var err error
 	fmt.Println("Se Registra el Tenant en Xubio y se avisa al alumno")
 	err = registrarTenant(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
 	registracion.estado = estadoConfirmadoID
 	err = updateRegistracion(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
 	err = enviarMailRegistracionAlumno(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return getMensaje("EXITO_CONFIRMAR"), nil
 }
 
 func (estado estadoAprobado ) consultarEstado () string {
-	return fmt.Sprint("Esta registracion ya fue aprobada por nuestro equipo y esperamos la confirmacion de tu profesor")
+	return getMensaje("ESTADO_APROBADO")
 }
 
-func (estado estadoAprobado ) vencerRegistracion (registracion *Registracion) error{
-	return errors.New("No se puede vencer una registracion que no esta completa")
+func (estado estadoAprobado ) vencerRegistracion (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
 }

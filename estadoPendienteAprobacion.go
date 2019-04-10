@@ -9,66 +9,66 @@ type estadoPendienteAprobacion struct {
 
 }
 
-func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Registracion) error{
-  return errors.New("No se puede enviar una nueva registracion mientras esta se encuentra pendiente")
+func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_PENDIENTE_INGRESAR"))
 }
 
-func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) error {
+func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) (string, error) {
   var err error
   fmt.Println("Se reinicia la registracion a 0")
   registracion.estado = estadoRechazadoID
   err = updateRegistracion(registracion)
   if err != nil {
-    return err
+    return "", err
   }
   err = enviarMailRechazoAlumno(registracion)
   if err != nil {
-    return err
+    return "", err
   }
-  return nil
+  return getMensaje("EXITO_RECHAZAR"), nil
 }
 
-func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) error {
+func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) (string, error) {
   var err error
   fmt.Println("Se envía mail al alumno y al profesor")
   registracion.estado = estadoAprobadoID
   err = updateRegistracion(registracion)
   if err != nil {
-    return err
+    return "", err
   }
   err = enviarMailProfesor(registracion)
   if err != nil {
-    return err
+    return "", err
   }
   err = enviarMailAceptacionAlumno(registracion)
   if err != nil {
-    return err
+    return "", err
   }
-  return nil
+  return getMensaje("EXITO_ACEPTAR"), nil
 }
 
-func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion) error {
+func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion) (string, error) {
   fmt.Println("Se anula la Registracion")
   registracion.estado = estadoAnuladoID
   err := reingresarRegistracion(registracion)
   if err != nil {
-    return err
+    return "", err
   }
   err = enviarMailAnulacionAlumno(registracion)
   if err != nil {
-    return err
+    return "", err
   }
-  return nil
+  return getMensaje("EXITO_ANULAR"), nil
 }
 
-func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion)error {
-  return errors.New("Esta registracion esta todavía pendiente")
+func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_PENDIENTE_CONFIRMAR"))
 }
 
 func (estado estadoPendienteAprobacion ) consultarEstado () string {
-  return fmt.Sprint("Esta registracion se encuentra pendiente de aprobacion por nuestro equipo")
+  return getMensaje("ESTADO_PENDIENTE")
 }
 
-func (estado estadoPendienteAprobacion ) vencerRegistracion (registracion *Registracion) error{
-  return errors.New("No se puede vencer una registracion que no esta completa")
+func (estado estadoPendienteAprobacion ) vencerRegistracion (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
 }

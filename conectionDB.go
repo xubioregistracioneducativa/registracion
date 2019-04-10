@@ -186,7 +186,7 @@ func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return registracion , errors.New("SQL: No se encontraron registraciones con ese ID")
+			return registracion , errors.New(getMensaje("ERROR_DATABASE_REGISTRACIONID"))
 		}
 	  	return registracion, err
 	}
@@ -210,7 +210,7 @@ func obtenerRegistracionPorEmail(email string) (Registracion, error){
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return registracion , errors.New("SQL: No se encontraron registraciones con ese email")
+			return registracion , errors.New(getMensaje("ERROR_DATABASE_REGISTRACIONEMAIL"))
 		}
 		return registracion, err
 	}
@@ -305,7 +305,7 @@ func obtenerLink(idregistracion int, accion string) (Link, error) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return link , errors.New("El link no es valido")
+			return link , errors.New(getMensaje("ERROR_DATABASE_LINK"))
 		}
 		return link, err
 	}

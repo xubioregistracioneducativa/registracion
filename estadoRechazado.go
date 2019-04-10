@@ -9,7 +9,7 @@ type estadoRechazado struct {
 
 }
 
-func (estado estadoRechazado ) ingresarNuevosDatos (registracion *Registracion) error {
+func (estado estadoRechazado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoPendienteAprobacionID
 	var err error
@@ -19,32 +19,32 @@ func (estado estadoRechazado ) ingresarNuevosDatos (registracion *Registracion) 
 		err = reingresarRegistracion(registracion)
 	}
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return getMensaje("EXITO_INGRESAR"), nil
 }
 
-func (estado estadoRechazado ) rechazarPorCS (registracion *Registracion) error {
-	return errors.New("Esta registracion ya fue rechazada anteriormente, por lo tanto no puede ser rechazada")
+func (estado estadoRechazado ) rechazarPorCS (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_RECHAZADA_RECHAZAR"))
 }
 
-func (estado estadoRechazado ) aceptarPorCS (registracion *Registracion) error{
-	return errors.New("Esta registracion ya fue rechazada anteriormente, por lo tanto no puede ser aceptada")
+func (estado estadoRechazado ) aceptarPorCS (registracion *Registracion) (string, error){
+	return "", errors.New(getMensaje("ERROR_RECHAZADA_ACEPTAR"))
 }
 
-func (estado estadoRechazado ) anularPorCS (registracion *Registracion) error {
-	return errors.New("Esta registracion ya fue rechazada anteriormente, por lo tanto no puede ser anulada")
+func (estado estadoRechazado ) anularPorCS (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_RECHAZADA_ANULAR"))
 }
 
-func (estado estadoRechazado ) confirmarPorProfesor (registracion *Registracion) error{
-	return errors.New("Esta registracion ya fue rechazada anteriormente, por lo tanto no puede ser confirmada")
+func (estado estadoRechazado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_RECHAZADA_CONFIRMAR"))
 }
 
 func (estado estadoRechazado ) consultarEstado () string {
-	return fmt.Sprint("Esta registracion fue rechazada, puede volver a cargar una nueva registracion")
+	return getMensaje("ESTADO_RECHAZADO")
 }
 
-func (estado estadoRechazado ) vencerRegistracion (registracion *Registracion) error{
-	return errors.New("No se puede vencer una registracion que no esta completa")
+func (estado estadoRechazado ) vencerRegistracion (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
 }

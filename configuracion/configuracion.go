@@ -15,6 +15,7 @@ type ConfiguracionStruct struct {
 	EmailPrueba string			`json:"emailPrueba"`
 	ValidaCaptcha bool			`json:"validaCaptcha"`
 	CodigoSalteaCaptcha string 	`json:"codigoSalteaCaptcha"`
+	NombreArchivoMensajes string 	`json:"nombreArchivoMensajes"`
 }
 
 var configuracion ConfiguracionStruct
@@ -72,4 +73,8 @@ func EnviaEmails() bool {
 
 func CodigoSalteaCaptcha() string {
 	return configuracion.CodigoSalteaCaptcha
+}
+
+func NombreArchivoMensajes() string {
+	return configuracion.NombreArchivoMensajes
 }

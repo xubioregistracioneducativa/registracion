@@ -14,13 +14,13 @@ const (  // iota is reset to 0
 )
 
 type estado interface {
-  ingresarNuevosDatos(*Registracion) error
-  rechazarPorCS(*Registracion) error
-  aceptarPorCS(*Registracion) error
-  anularPorCS(*Registracion) error
-  confirmarPorProfesor(*Registracion) error
+  ingresarNuevosDatos(*Registracion) (string, error)
+  rechazarPorCS(*Registracion) (string, error)
+  aceptarPorCS(*Registracion) (string, error)
+  anularPorCS(*Registracion) (string, error)
+  confirmarPorProfesor(*Registracion) (string, error)
   consultarEstado() string
-  vencerRegistracion(*Registracion) error
+  vencerRegistracion(*Registracion) (string, error)
 }
 
 func nuevoEstado (idEstado estadoID) (estado, error) {

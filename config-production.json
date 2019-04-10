@@ -5,5 +5,6 @@
   "enviaEmails": true,
   "emailPrueba": "sebastian.taka@hotmail.com",
   "validaCaptcha": true,
-  "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO"
+  "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO",
+  "nombreArchivoMensajes" : "mensajes.json"
 }

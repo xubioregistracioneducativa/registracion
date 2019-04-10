@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -28,61 +29,75 @@ func responderError(w http.ResponseWriter, code int, message string) {
 	responderJSON(w, code, map[string]string{"error": message})
 }
 
+func responderExito(w http.ResponseWriter, code int, message string) {
+	responderJSON(w, code, map[string]string{"Exito": message})
+}
+
 
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
+	defer handlePanic(writer)
 
 	params := mux.Vars(request)
 
 	registracion, err := obtenerRegistracionPorEmail(params["email"])
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = validarLink(registracion.IDRegistracion, params["accion"], params["validationCode"]);
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(registracion.estado)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
-	
+
+	var mensajeEstado string
+
 	switch(params["accion"]) {
     case "AceptarCS":
-      err = estado.aceptarPorCS(&registracion)
+		mensajeEstado, err = estado.aceptarPorCS(&registracion)
     case "RechazarCS":
-      err = estado.rechazarPorCS(&registracion)
+		mensajeEstado, err = estado.rechazarPorCS(&registracion)
 	case "AnularCS":
-		err = estado.anularPorCS(&registracion)
+		mensajeEstado, err = estado.anularPorCS(&registracion)
     case "ConfirmarProfesor":
-      err = estado.confirmarPorProfesor(&registracion)
+		mensajeEstado, err = estado.confirmarPorProfesor(&registracion)
 	case "ConsultarEstado":
-		mensajeEstado := estado.consultarEstado()
-		responderJSON(writer, 202, mensajeEstado)
+		mensajeEstado = estado.consultarEstado()
+		//http.Redirect(writer, request, "https://localhost:8443/mantenimiento.jsp", http.StatusSeeOther)
+		responderJSON(writer, http.StatusAccepted, mensajeEstado)
 		return
 	case "VencerRegistracion":
 		err = estado.vencerRegistracion(&registracion)
     default:
-    	responderError(writer, 400, "No se reconoce el input")
-		return
+    	err = errors.New(getMensaje("ERROR_ACCIONINCORRECTA"))
  	 }
 
   	if err != nil {
-		responderError(writer, 400, err.Error())
 		return
 	}
 
-	responderJSON(writer, 202, registracion)
+	responderExito(writer, http.StatusAccepted, mensajeEstado)
+
+}
+
+func handlePanic(writer http.ResponseWriter) {
+	if recoveredError := recover(); recoveredError != nil{
+		responderError(writer, http.StatusBadRequest,getMensaje("ERROR_DEFAULT"))
+	}
 }
 
 func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
+	defer handlePanic( writer)
 
 	var err error
 
@@ -91,57 +106,57 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 	err = verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	datosRegistracion.Registracion.estado, err = obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, 400, err.Error())
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	responderJSON(writer, 201, datosRegistracion)
+	responderJSON(writer, http.StatusCreated, datosRegistracion)
 
 }
 

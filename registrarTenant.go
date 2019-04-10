@@ -3,11 +3,14 @@ package main
 import (
 	"bytes"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,7 +32,7 @@ func registrarTenant(registracion *Registracion) error {
 		"&newCodigoPromocional=" +
 		"&codigoSalteaCaptcha=%s" +
 		"&soyContador=false" +
-		"&soyEmpresa=false" +
+		"&soyEmpresa=true" +
 		"&soyEstudiante=true" +
 		"&leiTerminos=true" +
 		"&g-recaptcha-response=" +
@@ -78,7 +81,40 @@ func registrarTenant(registracion *Registracion) error {
 
 	fmt.Println("response Status:", resp.Status)
 	fmt.Println("response Headers:", resp.Header)
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("response Body:", string(body))
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	fmt.Println("response Body: "+ string(body) )
+	err = buscarError(string(body))
+	if err != nil{
+		return err
+	}
+	// BODY ESPERADO "<createCuenta><errorNum>0</errorNum><mensaje>La creación del usuario se realizó correctamente</mensaje><OK>1</OK></createCuenta>"
+	// BODY ERROR response Body: <createCuenta><errorNum>20</errorNum><mensaje>Ya existe un usuario con el mail ingresado. Si no recuerda la clave utilice la opción de "Olvidé mi clave" en la pantalla de ingreso.</mensaje><OK>0</OK></createCuenta>
+	return nil
+}
+
+func buscarError(body string) error {
+
+
+	substrings := strings.Split(
+		strings.ReplaceAll(
+			strings.ReplaceAll(body, "</OK>", "#"),
+			"<OK>", "#"),
+			"#")
+	fmt.Println(substrings)
+	Ok, err := strconv.Atoi(substrings[1])
+	if err != nil{
+		return err
+	}
+	if Ok == 0 {
+		substrings = strings.Split(strings.ReplaceAll(
+			strings.ReplaceAll(
+				body, "<mensaje>", "#"),
+				"</mensaje>", "#"),
+				"#")
+		return errors.New(substrings[1])
+	}
 	return nil
 }

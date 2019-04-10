@@ -9,7 +9,7 @@ type estadoAnulado struct {
 
 }
 
-func (estado estadoAnulado ) ingresarNuevosDatos (registracion *Registracion) error {
+func (estado estadoAnulado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoPendienteAprobacionID
 	var err error
@@ -19,32 +19,32 @@ func (estado estadoAnulado ) ingresarNuevosDatos (registracion *Registracion) er
 		err = reingresarRegistracion(registracion)
 	}
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return getMensaje("EXITO_INGRESAR"), nil
 }
 
-func (estado estadoAnulado ) rechazarPorCS (registracion *Registracion) error {
-	return errors.New("Esta registracion fue anulada por nuestro equipo, por lo tanto no puede ser rechazada")
+func (estado estadoAnulado ) rechazarPorCS (registracion *Registracion)(string, error) {
+	return "", errors.New(getMensaje("ERROR_ANULADA_RECHAZAR"))
 }
 
-func (estado estadoAnulado ) aceptarPorCS (registracion *Registracion) error{
-	return errors.New("Esta registracion fue anulada por nuestro equipo, por lo tanto no puede ser aceptada")
+func (estado estadoAnulado ) aceptarPorCS (registracion *Registracion) (string, error){
+	return "", errors.New(getMensaje("ERROR_ANULADA_ACEPTAR"))
 }
 
-func (estado estadoAnulado ) anularPorCS (registracion *Registracion) error {
-	return errors.New("Esta registracion fue anulada por nuestro equipo, por lo tanto no puede ser anulada")
+func (estado estadoAnulado ) anularPorCS (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_ANULADA_ANULAR"))
 }
 
-func (estado estadoAnulado ) confirmarPorProfesor (registracion *Registracion) error{
-	return errors.New("Esta registracion fue anulada por nuestro equipo, por lo tanto no puede ser confirmada")
+func (estado estadoAnulado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_ANULADA_CONFIRMAR"))
 }
 
 func (estado estadoAnulado ) consultarEstado () string {
-	return fmt.Sprint("Esta registracion fue anulada por nuestro equipo, puede volver a cargar una nueva registracion")
+	return getMensaje("ESTADO_ANULADO")
 }
 
-func (estado estadoAnulado ) vencerRegistracion (registracion *Registracion) error{
-	return errors.New("No se puede vencer una registracion que no esta completa")
+func (estado estadoAnulado ) vencerRegistracion (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
 }

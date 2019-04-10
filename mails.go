@@ -92,7 +92,7 @@ func enviarMailBienvenidaAlumno(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado, registracion.Email))
-	err = enviarMail(registracion.Email, "Bienvenido a Xubio Educativo", cuerpo)
+	err = enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_BIENVENIDA"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func botonesMailAlumno(linkConsultarEstado string) string {
 func enviarMailRechazoAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeRechazoAlumnos()
-	err := enviarMail(registracion.Email, "Su Registracion educativa fue rechazada", cuerpo)
+	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_RECHAZO"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func enviarMailProfesor(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado, registracion.Email))
-	err = enviarMail(registracion.EmailProfesor, "Un alumno suyo quiere una cuenta educativa en Xubio", cuerpo)
+	err = enviarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_ALUMNONUEVOPROFESOR"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -189,7 +189,7 @@ func enviarMailProfesorReenviado(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado, registracion.Email))
-	err = enviarMail(registracion.EmailProfesor, "Su alumno lo está esperando para poder empezar a usar Xubio", cuerpo)
+	err = enviarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_REINTENTARALUMNOPROFESOR" ), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -201,7 +201,7 @@ func enviarMailProfesorReenviado(registracion *Registracion) error {
 func enviarMailAnulacionAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeAnulacionAlumnos()
-	err := enviarMail(registracion.Email, "Su Registracion educativa fue anulada", cuerpo)
+	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ANULACION"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -223,7 +223,7 @@ func mailDeAnulacionAlumnos() string{
 func enviarMailAceptacionAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeAceptacionAlumnos()
-	err := enviarMail(registracion.Email, "Su Registracion educativa fue aceptada", cuerpo)
+	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ACEPTACION"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -243,7 +243,7 @@ func mailDeAceptacionAlumnos() string{
 func enviarMailRegistracionAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeRegistracionAlumnos()
-	err := enviarMail(registracion.Email, "Su cuenta en Xubio Educativo fue aceptada", cuerpo)
+	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_REGISTROTENANT"), cuerpo)
 	if err != nil {
 		return err
 	}

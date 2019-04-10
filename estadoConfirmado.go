@@ -9,37 +9,37 @@ type estadoConfirmado struct {
 
 }
 
-func (estado estadoConfirmado ) ingresarNuevosDatos (registracion *Registracion) error {
-  return errors.New("Esta registracion ya fue confirmada")
+func (estado estadoConfirmado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_CONFIRMADA_INGRESAR"))
 }
 
-func (estado estadoConfirmado ) rechazarPorCS (registracion *Registracion) error {
-  return errors.New("Esta registracion ya fue confirmada")
+func (estado estadoConfirmado ) rechazarPorCS (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_CONFIRMADA_RECHAZAR"))
 }
 
-func (estado estadoConfirmado ) aceptarPorCS (registracion *Registracion) error {
-  return errors.New("Esta registracion ya fue confirmada")
+func (estado estadoConfirmado ) aceptarPorCS (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_CONFIRMADA_ACEPTAR"))
 }
 
-func (estado estadoConfirmado ) anularPorCS (registracion *Registracion) error {
-	return errors.New("Esta registracion ya fue confirmada, por lo tanto no puede anularse")
+func (estado estadoConfirmado ) anularPorCS (registracion *Registracion) (string, error) {
+	return "", errors.New(getMensaje("ERROR_CONFIRMADA_ANULAR"))
 }
 
-func (estado estadoConfirmado ) confirmarPorProfesor (registracion *Registracion) error {
-  return errors.New("Esta registracion ya fue confirmada")
+func (estado estadoConfirmado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
+  return "", errors.New(getMensaje("ERROR_CONFIRMADA_CONFIRMAR"))
 
 }
 
 func (estado estadoConfirmado ) consultarEstado () string {
-	return fmt.Sprint("Esta registracion ya fue completada, podes entrar a Xubio.com e ingresar con tu email y contraseña")
+	return getMensaje("ESTADO_CONFIRMADO")
 }
 
-func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) error{
+func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) (string, error){
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoInicioRegistracionID
 	err := reingresarRegistracion(registracion)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return getMensaje("EXITO_CONFIRMAR"), nil
 }
