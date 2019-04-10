@@ -1,6 +1,6 @@
 {
   "puerto": ":8081",
-  "urlMono": "http://localhost:8443",
+  "urlMono": "https://localhost:8443",
   "urlStudent": "http://localhost:8081",
   "enviaEmails": false,
   "emailPrueba": "sebastian.taka@hotmail.com",

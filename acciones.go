@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
+	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"net/http"
 )
 
@@ -25,12 +26,19 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
 	}
 }
  
-func responderError(w http.ResponseWriter, code int, message string) {
-	responderJSON(w, code, map[string]string{"error": message})
+func responderExito(w http.ResponseWriter, r *http.Request, code int, message string) {
+	//responderJSON(w, code, map[string]string{"error": message})
+	http.Redirect(w, r, configuracion.UrlMono() + "/exito.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
-func responderExito(w http.ResponseWriter, code int, message string) {
-	responderJSON(w, code, map[string]string{"Exito": message})
+func responderError(w http.ResponseWriter, r *http.Request, code int, message string) {
+	//responderJSON(w, code, map[string]string{"error": message})
+	http.Redirect(w, r, configuracion.UrlMono() + "/error-accion.jsp?mensaje=" + message, http.StatusSeeOther)
+}
+
+func responderEstado(w http.ResponseWriter, r *http.Request, code int, message string) {
+	//responderJSON(w, code, map[string]string{"error": message})
+	http.Redirect(w, r, configuracion.UrlMono() + "/estado-de-registracion.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
 func responderExitoCreado(w http.ResponseWriter, code int, message string) {
@@ -38,28 +46,28 @@ func responderExitoCreado(w http.ResponseWriter, code int, message string) {
 }
 
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
-	defer handlePanic(writer)
+	defer handlePanic(writer, request)
 
 	params := mux.Vars(request)
 
 	registracion, err := obtenerRegistracionPorEmail(params["email"])
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = validarLink(registracion.IDRegistracion, params["accion"], params["validationCode"]);
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(registracion.estado)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -76,8 +84,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		mensajeEstado, err = estado.confirmarPorProfesor(&registracion)
 	case "ConsultarEstado":
 		mensajeEstado = estado.consultarEstado()
-		//http.Redirect(writer, request, "https://localhost:8443/mantenimiento.jsp", http.StatusSeeOther)
-		responderJSON(writer, http.StatusAccepted, mensajeEstado)
+		responderEstado(writer, request, http.StatusAccepted, mensajeEstado)
 		return
 	case "VencerRegistracion":
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
@@ -86,22 +93,22 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
  	 }
 
   	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	responderExito(writer, http.StatusAccepted, mensajeEstado)
+	responderExito(writer, request, http.StatusSeeOther, mensajeEstado)
 
 }
 
-func handlePanic(writer http.ResponseWriter) {
+func handlePanic(writer http.ResponseWriter, request *http.Request) {
 	if recoveredError := recover(); recoveredError != nil{
-		responderError(writer, http.StatusBadRequest,getMensaje("ERROR_DEFAULT"))
+		responderError(writer, request, http.StatusBadRequest,getMensaje("ERROR_DEFAULT"))
 	}
 }
 
 func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
-	defer handlePanic( writer)
+	defer handlePanic( writer, request)
 
 	var err error
 
@@ -110,53 +117,53 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 	err = verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	datosRegistracion.Registracion.estado, err = obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, http.StatusBadRequest, err.Error())
+		responderError(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
