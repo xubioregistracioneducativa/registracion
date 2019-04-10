@@ -33,6 +33,9 @@ func responderExito(w http.ResponseWriter, code int, message string) {
 	responderJSON(w, code, map[string]string{"Exito": message})
 }
 
+func responderExitoCreado(w http.ResponseWriter, code int, message string) {
+	responderJSON(w, code, map[string]string{"Exito": message})
+}
 
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 	defer handlePanic(writer)
@@ -77,12 +80,13 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		responderJSON(writer, http.StatusAccepted, mensajeEstado)
 		return
 	case "VencerRegistracion":
-		err = estado.vencerRegistracion(&registracion)
+		mensajeEstado, err = estado.vencerRegistracion(&registracion)
     default:
     	err = errors.New(getMensaje("ERROR_ACCIONINCORRECTA"))
  	 }
 
   	if err != nil {
+		responderError(writer, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -124,7 +128,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	err = estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
+	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
 		responderError(writer, http.StatusBadRequest, err.Error())
@@ -156,7 +160,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	responderJSON(writer, http.StatusCreated, datosRegistracion)
+	responderExitoCreado(writer, http.StatusCreated, mensajeEstado)
 
 }
 
