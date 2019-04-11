@@ -10,7 +10,7 @@ type estadoPendienteAprobacion struct {
 }
 
 func (estado estadoPendienteAprobacion ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_PENDIENTE_INGRESAR"))
+  return "", errors.New("ERROR_PENDIENTE_INGRESAR")
 }
 
 func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registracion) (string, error) {
@@ -25,7 +25,7 @@ func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registraci
   if err != nil {
     return "", err
   }
-  return getMensaje("EXITO_RECHAZAR"), nil
+  return "EXITO_RECHAZAR", nil
 }
 
 func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) (string, error) {
@@ -44,7 +44,7 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   if err != nil {
     return "", err
   }
-  return getMensaje("EXITO_ACEPTAR"), nil
+  return "EXITO_ACEPTAR", nil
 }
 
 func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion) (string, error) {
@@ -58,17 +58,17 @@ func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion
   if err != nil {
     return "", err
   }
-  return getMensaje("EXITO_ANULAR"), nil
+  return "EXITO_ANULAR", nil
 }
 
 func (estado estadoPendienteAprobacion ) confirmarPorProfesor (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_PENDIENTE_CONFIRMAR"))
+  return "", errors.New("ERROR_PENDIENTE_CONFIRMAR")
 }
 
 func (estado estadoPendienteAprobacion ) consultarEstado () string {
-  return getMensaje("ESTADO_PENDIENTE")
+  return "ESTADO_PENDIENTE"
 }
 
 func (estado estadoPendienteAprobacion ) vencerRegistracion (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
+  return "", errors.New("ERROR_REGISTRACIONINCOMPLETA")
 }

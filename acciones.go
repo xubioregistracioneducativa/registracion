@@ -89,7 +89,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 	case "VencerRegistracion":
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
     default:
-    	err = errors.New(getMensaje("ERROR_ACCIONINCORRECTA"))
+    	err = errors.New("ERROR_ACCIONINCORRECTA")
  	 }
 
   	if err != nil {
@@ -103,7 +103,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 
 func handlePanic(writer http.ResponseWriter, request *http.Request) {
 	if recoveredError := recover(); recoveredError != nil{
-		responderError(writer, request, http.StatusBadRequest,getMensaje("ERROR_DEFAULT"))
+		responderError(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
 	}
 }
 

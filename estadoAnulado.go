@@ -22,29 +22,29 @@ func (estado estadoAnulado ) ingresarNuevosDatos (registracion *Registracion) (s
 		return "", err
 	}
 
-	return getMensaje("EXITO_INGRESAR"), nil
+	return "EXITO_INGRESAR", nil
 }
 
 func (estado estadoAnulado ) rechazarPorCS (registracion *Registracion)(string, error) {
-	return "", errors.New(getMensaje("ERROR_ANULADA_RECHAZAR"))
+	return "", errors.New("ERROR_ANULADA_RECHAZAR")
 }
 
 func (estado estadoAnulado ) aceptarPorCS (registracion *Registracion) (string, error){
-	return "", errors.New(getMensaje("ERROR_ANULADA_ACEPTAR"))
+	return "", errors.New("ERROR_ANULADA_ACEPTAR")
 }
 
 func (estado estadoAnulado ) anularPorCS (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_ANULADA_ANULAR"))
+	return "", errors.New("ERROR_ANULADA_ANULAR")
 }
 
 func (estado estadoAnulado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_ANULADA_CONFIRMAR"))
+	return "", errors.New("ERROR_ANULADA_CONFIRMAR")
 }
 
 func (estado estadoAnulado ) consultarEstado () string {
-	return getMensaje("ESTADO_ANULADO")
+	return "ESTADO_ANULADO"
 }
 
 func (estado estadoAnulado ) vencerRegistracion (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
+	return "", errors.New("ERROR_REGISTRACIONINCOMPLETA")
 }

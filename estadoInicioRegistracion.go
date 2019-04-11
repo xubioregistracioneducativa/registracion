@@ -22,29 +22,29 @@ func (estado estadoInicioRegistracion ) ingresarNuevosDatos (registracion *Regis
 		return "", err
 	}
 
-  	return getMensaje("EXITO_INGRESAR"), nil
+  	return "EXITO_INGRESAR", nil
 }
 
 func (estado estadoInicioRegistracion ) rechazarPorCS (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_ESTADOINICIO"))
+  return "", errors.New("ERROR_ESTADOINICIO")
 }
 
 func (estado estadoInicioRegistracion ) aceptarPorCS (registracion *Registracion) (string, error){
-  return "", errors.New(getMensaje("ERROR_ESTADOINICIO"))
+  return "", errors.New("ERROR_ESTADOINICIO")
 }
 
 func (estado estadoInicioRegistracion ) anularPorCS (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_ESTADOINICIO"))
+	return "", errors.New("ERROR_ESTADOINICIO")
 }
 
 func (estado estadoInicioRegistracion ) confirmarPorProfesor (registracion *Registracion) (string, error){
-  return "", errors.New(getMensaje("ERROR_ESTADOINICIO"))
+  return "", errors.New("ERROR_ESTADOINICIO")
 }
 
 func (estado estadoInicioRegistracion ) consultarEstado () string {
-	return getMensaje("ESTADO_INICIO")
+	return "ESTADO_INICIO"
 }
 
 func (estado estadoInicioRegistracion ) vencerRegistracion (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_ESTADOINICIO"))
+	return "", errors.New("ERROR_ESTADOINICIO")
 }

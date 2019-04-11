@@ -16,11 +16,11 @@ func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) (
   	if err != nil {
   		return "", err
   	}
-	return getMensaje("EXITO_INGRESAR"), nil
+	return "EXITO_INGRESAR", nil
 }
 
 func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) (string, error) {
-  	return "", errors.New(getMensaje("ERROR_APROBADA_RECHAZAR"))
+  	return "", errors.New("ERROR_APROBADA_RECHAZAR")
 }
 
 func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) (string, error)  {
@@ -29,7 +29,7 @@ func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) (string,
 	if err != nil {
 		return "", err
 	}
-	return getMensaje("EXITO_ACEPTAR"), nil
+	return "EXITO_ACEPTAR", nil
 }
 
 func (estado estadoAprobado ) anularPorCS (registracion *Registracion) (string, error) {
@@ -43,7 +43,7 @@ func (estado estadoAprobado ) anularPorCS (registracion *Registracion) (string, 
 	if err != nil {
 		return "", err
 	}
-	return getMensaje("EXITO_ANULAR"), nil
+	return "EXITO_ANULAR", nil
 }
 
 func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
@@ -63,13 +63,13 @@ func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) 
 		return "", err
 	}
 
-	return getMensaje("EXITO_CONFIRMAR"), nil
+	return "EXITO_CONFIRMAR", nil
 }
 
 func (estado estadoAprobado ) consultarEstado () string {
-	return getMensaje("ESTADO_APROBADO")
+	return "ESTADO_APROBADO"
 }
 
 func (estado estadoAprobado ) vencerRegistracion (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
+	return "", errors.New("ERROR_REGISTRACIONINCOMPLETA")
 }

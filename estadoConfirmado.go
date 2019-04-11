@@ -10,28 +10,28 @@ type estadoConfirmado struct {
 }
 
 func (estado estadoConfirmado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_CONFIRMADA_INGRESAR"))
+  return "", errors.New("ERROR_CONFIRMADA_INGRESAR")
 }
 
 func (estado estadoConfirmado ) rechazarPorCS (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_CONFIRMADA_RECHAZAR"))
+  return "", errors.New("ERROR_CONFIRMADA_RECHAZAR")
 }
 
 func (estado estadoConfirmado ) aceptarPorCS (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_CONFIRMADA_ACEPTAR"))
+  return "", errors.New("ERROR_CONFIRMADA_ACEPTAR")
 }
 
 func (estado estadoConfirmado ) anularPorCS (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_CONFIRMADA_ANULAR"))
+	return "", errors.New("ERROR_CONFIRMADA_ANULAR")
 }
 
 func (estado estadoConfirmado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
-  return "", errors.New(getMensaje("ERROR_CONFIRMADA_CONFIRMAR"))
+  return "", errors.New("ERROR_CONFIRMADA_CONFIRMAR")
 
 }
 
 func (estado estadoConfirmado ) consultarEstado () string {
-	return getMensaje("ESTADO_CONFIRMADO")
+	return "ESTADO_CONFIRMADO"
 }
 
 func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) (string, error){
@@ -41,5 +41,5 @@ func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) 
 	if err != nil {
 		return "", err
 	}
-	return getMensaje("EXITO_CONFIRMAR"), nil
+	return "EXITO_CONFIRMAR", nil
 }

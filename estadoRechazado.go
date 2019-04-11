@@ -22,29 +22,29 @@ func (estado estadoRechazado ) ingresarNuevosDatos (registracion *Registracion) 
 		return "", err
 	}
 
-	return getMensaje("EXITO_INGRESAR"), nil
+	return "EXITO_INGRESAR", nil
 }
 
 func (estado estadoRechazado ) rechazarPorCS (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_RECHAZADA_RECHAZAR"))
+	return "", errors.New("ERROR_RECHAZADA_RECHAZAR")
 }
 
 func (estado estadoRechazado ) aceptarPorCS (registracion *Registracion) (string, error){
-	return "", errors.New(getMensaje("ERROR_RECHAZADA_ACEPTAR"))
+	return "", errors.New("ERROR_RECHAZADA_ACEPTAR")
 }
 
 func (estado estadoRechazado ) anularPorCS (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_RECHAZADA_ANULAR"))
+	return "", errors.New("ERROR_RECHAZADA_ANULAR")
 }
 
 func (estado estadoRechazado ) confirmarPorProfesor (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_RECHAZADA_CONFIRMAR"))
+	return "", errors.New("ERROR_RECHAZADA_CONFIRMAR")
 }
 
 func (estado estadoRechazado ) consultarEstado () string {
-	return getMensaje("ESTADO_RECHAZADO")
+	return "ESTADO_RECHAZADO"
 }
 
 func (estado estadoRechazado ) vencerRegistracion (registracion *Registracion) (string, error) {
-	return "", errors.New(getMensaje("ERROR_REGISTRACIONINCOMPLETA"))
+	return "", errors.New("ERROR_REGISTRACIONINCOMPLETA")
 }
