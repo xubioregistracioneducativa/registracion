@@ -167,7 +167,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	responderExitoCreado(writer, http.StatusCreated, mensajeEstado)
+	responderExito(writer,request, http.StatusCreated, mensajeEstado)
 
 }
 
