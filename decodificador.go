@@ -1,11 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
-/*
 func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
+
+	var datosRegistracion DatosRegistracion
+	tipoDeRequest := request.Header.Get("Content-Type")
+	if tipoDeRequest == "application/x-www-form-urlencoded"{
+		datosRegistracion = DecodificarForm(request)
+	}else {
+		datosRegistracion = DecodificarJson(request)
+	}
+	return datosRegistracion
+
+}
+
+func DecodificarJson(request *http.Request) DatosRegistracion {
 
 	decoder := json.NewDecoder(request.Body)
 	decoder.DisallowUnknownFields ()
@@ -24,9 +37,8 @@ func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
 	return datosRegistracion
 
 }
- */
 
-func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
+func DecodificarForm(request *http.Request) DatosRegistracion {
 
 	err := request.ParseForm()
 

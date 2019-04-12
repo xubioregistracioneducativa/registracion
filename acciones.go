@@ -28,17 +28,17 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
  
 func responderExito(w http.ResponseWriter, r *http.Request, code int, message string) {
 	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + "/exito.jsp?mensaje=" + message, http.StatusSeeOther)
+	http.Redirect(w, r, configuracion.UrlMono() + "/ar/exito.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
 func responderError(w http.ResponseWriter, r *http.Request, code int, message string) {
 	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + "/error-accion.jsp?mensaje=" + message, http.StatusSeeOther)
+	http.Redirect(w, r, configuracion.UrlMono() + "/ar/error-accion.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
 func responderEstado(w http.ResponseWriter, r *http.Request, code int, message string) {
 	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + "/estado-de-registracion.jsp?mensaje=" + message, http.StatusSeeOther)
+	http.Redirect(w, r, configuracion.UrlMono() + "/ar/estado-de-registracion.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
 func responderExitoCreado(w http.ResponseWriter, code int, message string) {
