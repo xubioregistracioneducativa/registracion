@@ -41,7 +41,7 @@ func responderEstado(w http.ResponseWriter, r *http.Request, code int, message s
 	http.Redirect(w, r, configuracion.UrlMono() + "/ar/estado-de-registracion.jsp?mensaje=" + message, http.StatusSeeOther)
 }
 
-func responderExitoCreado(w http.ResponseWriter, code int, message string) {
+func responderExitoCreado(w http.ResponseWriter, r *http.Request, code int, message string) {
 	responderJSON(w, code, map[string]string{"Exito": message})
 }
 
@@ -167,7 +167,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	responderExito(writer,request, http.StatusCreated, mensajeEstado)
+	responderExito(writer, request, http.StatusCreated, mensajeEstado)
 
 }
 

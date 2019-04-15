@@ -148,7 +148,7 @@ func verificarEmail(email string) error {
 }
 
 func verificarDominioEstudiantil(dominio string) error {
-	dominiosProhibidos :=  []string{"gmail", "yahoo", "hotmail", "outlook", "live"}
+		dominiosProhibidos :=  []string{"GMAIL", "YAHOO", "HOTMAIL", "OUTLOOK", "LIVE"}
 	for i := 0; i < len(dominiosProhibidos); i++ {
 		if strings.Contains(dominio, dominiosProhibidos[i]) {
 			return errors.New("ErrorInterno: Dominio Invalido")
