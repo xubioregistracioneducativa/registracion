@@ -11,5 +11,8 @@
   "dbport": 5432,
   "dbuser": "postgres",
   "dbpassword": "Post66MM/",
-  "dbname": "faf_multitenant_go"
+  "dbname": "faf_multitenant_go",
+  "urlExito": "ar/exito.jsp?mensaje=",
+  "urlError" : "ar/error-accion.jsp?mensaje=",
+  "urlConsultarEstado": "ar/estado-de-registracion.jsp?mensaje="
 }

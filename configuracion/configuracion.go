@@ -9,19 +9,22 @@ import (
 )
 
 type ConfiguracionStruct struct {
-	Puerto string					`json:"puerto"`
-	UrlMono string					`json:"urlMono"`
-	UrlStudent string				`json:"urlStudent"`
-	EnviaEmails	bool				`json:"enviaEmails"`
-	EmailPrueba string				`json:"emailPrueba"`
-	ValidaCaptcha bool				`json:"validaCaptcha"`
-	CodigoSalteaCaptcha string 		`json:"codigoSalteaCaptcha"`
-	NombreArchivoMensajes string	`json:"nombreArchivoMensajes"`
-	DBHost			string			`json:"dbhost"`
-	DBPort			int				`json:"dbport"`
-	DBUser			string			`json:"dbuser"`
-	DBPassword		string			`json:"dbpassword"`
-	DBName			string			`json:"dbname"`
+	Puerto 					string		`json:"puerto"`
+	UrlMono 				string		`json:"urlMono"`
+	UrlStudent 				string		`json:"urlStudent"`
+	EnviaEmails				bool		`json:"enviaEmails"`
+	EmailPrueba 			string		`json:"emailPrueba"`
+	ValidaCaptcha 			bool		`json:"validaCaptcha"`
+	CodigoSalteaCaptcha 	string 		`json:"codigoSalteaCaptcha"`
+	NombreArchivoMensajes 	string		`json:"nombreArchivoMensajes"`
+	DBHost					string		`json:"dbhost"`
+	DBPort					int			`json:"dbport"`
+	DBUser					string		`json:"dbuser"`
+	DBPassword				string		`json:"dbpassword"`
+	DBName					string		`json:"dbname"`
+	UrlExito				string		`json:"urlExito"`
+	UrlError				string		`json:"urlError"`
+	UrlConsultarEstado		string		`json:"urlConsultarEstado"`
 }
 
 var configuracion ConfiguracionStruct
@@ -103,4 +106,16 @@ func DBPassword() string{
 
 func DBName() string  {
 	return configuracion.DBName
+}
+
+func UrlExito() string {
+	return configuracion.UrlExito
+}
+
+func UrlError() string {
+	return configuracion.UrlError
+}
+
+func UrlConsultarEstado() string {
+	return configuracion.UrlConsultarEstado
 }
