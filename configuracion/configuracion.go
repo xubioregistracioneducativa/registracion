@@ -10,21 +10,21 @@ import (
 
 type ConfiguracionStruct struct {
 	Puerto 					string		`json:"puerto"`
-	UrlMono 				string		`json:"urlMono"`
-	UrlStudent 				string		`json:"urlStudent"`
-	EnviaEmails				bool		`json:"enviaEmails"`
-	EmailPrueba 			string		`json:"emailPrueba"`
-	ValidaCaptcha 			bool		`json:"validaCaptcha"`
-	CodigoSalteaCaptcha 	string 		`json:"codigoSalteaCaptcha"`
-	NombreArchivoMensajes 	string		`json:"nombreArchivoMensajes"`
+	UrlMono 				string		`json:"urlmono"`
+	UrlStudent 				string		`json:"urlstudent"`
+	EnviaEmails				bool		`json:"enviaemails"`
+	EmailPrueba 			string		`json:"emailprueba"`
+	ValidaCaptcha 			bool		`json:"validacaptcha"`
+	CodigoSalteaCaptcha 	string 		`json:"codigosalteacaptcha"`
+	NombreArchivoMensajes 	string		`json:"nombrearchivomensajes"`
 	DBHost					string		`json:"dbhost"`
 	DBPort					int			`json:"dbport"`
 	DBUser					string		`json:"dbuser"`
 	DBPassword				string		`json:"dbpassword"`
 	DBName					string		`json:"dbname"`
-	PathExito				string		`json:"urlExito"`
-	PathError				string		`json:"urlError"`
-	PathConsultarEstado		string		`json:"urlConsultarEstado"`
+	PathExito				string		`json:"pathexito"`
+	PathError				string		`json:"patherror"`
+	PathConsultarEstado		string		`json:"pathconsultarEstado"`
 	PathEstudiantes			string		`json:"pathestudientes"`
 }
 

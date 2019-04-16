@@ -7,9 +7,9 @@ import (
 )
 
 type Link struct {
-  RegistracionID  int    		`json:"RegistracionID"`
-  Accion           string   	`json:"Accion"`
-  ValidationCode  string        `json:"ValidationCode"`
+  RegistracionID    int
+  Accion            string
+  ValidationCode    string
 
 }
 

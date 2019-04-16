@@ -1,26 +1,26 @@
 package main
 
 type DatosRegistracion struct {
-  LeiTerminos bool `json:"LeiTerminos"`
-  CaptchaValue string `json:"CaptchaValue"`
-  Registracion Registracion `json:"Registracion"`
+  LeiTerminos bool `json:"leiterminos"`
+  CaptchaValue string `json:"captchavalue"`
+  Registracion Registracion `json:"registracion"`
 }
 
 type Registracion struct {
-  IDRegistracion int    	`json:"IDRegistracion"`
-  Nombre       string   	`json:"Nombre"`
-  Apellido     string 		`json:"Apellido"`
-  Email        string 		`json:"Email"`
-  Telefono     string 		`json:"Telefono"`
-  Carrera      string 		`json:"Carrera"`
-  Clave        string 		`json:"Clave"`
-  NombreProfesor string 	`json:"NombreProfesor"`
-  ApellidoProfesor string 	`json:"ApellidoProfesor"`
-  EmailProfesor string 		`json:"EmailProfesor"`
-  Materia string  			`json:"Materia"`
-  Catedra string 			`json:"Catedra"`
-  Facultad string 			`json:"Facultad"`
-  Universidad string 		`json:"Universidad"`
+  IDRegistracion int    	`json:"idregistracion"`
+  Nombre       string   	`json:"nombre"`
+  Apellido     string 		`json:"apellido"`
+  Email        string 		`json:"email"`
+  Telefono     string 		`json:"telefono"`
+  Carrera      string 		`json:"carrera"`
+  Clave        string 		`json:"clave"`
+  NombreProfesor string 	`json:"nombreprofesor"`
+  ApellidoProfesor string 	`json:"apellidoprofesor"`
+  EmailProfesor string 		`json:"emailprofesor"`
+  Materia string  			`json:"materia"`
+  Catedra string 			`json:"catedra"`
+  Facultad string 			`json:"facultad"`
+  Universidad string 		`json:"universidad"`
   estado estadoID    			
   //estado  estado `gorm:"polymorphic:Owner;"`
 }
