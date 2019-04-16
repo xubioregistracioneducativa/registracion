@@ -26,24 +26,25 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
 		log.Panic(err)
 	}
 }
- 
+
+func responderExitoMono(w http.ResponseWriter, r *http.Request, code int, message string){
+	responderJSON(w, code, map[string]string{"exito": message})
+}
+
+func responderErrorMono(w http.ResponseWriter, r *http.Request, code int, message string){
+	responderJSON(w, code, map[string]string{"error": message})
+}
+
 func responderExito(w http.ResponseWriter, r *http.Request, code int, message string) {
-	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.UrlExito() + message, http.StatusSeeOther)
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathExito() + message, http.StatusSeeOther)
 }
 
 func responderError(w http.ResponseWriter, r *http.Request, code int, message string) {
-	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.UrlError() + message, http.StatusSeeOther)
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathError() + message, http.StatusSeeOther)
 }
 
 func responderEstado(w http.ResponseWriter, r *http.Request, code int, message string) {
-	//responderJSON(w, code, map[string]string{"error": message})
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.UrlConsultarEstado() + message, http.StatusSeeOther)
-}
-
-func responderExitoCreado(w http.ResponseWriter, r *http.Request, code int, message string) {
-	responderJSON(w, code, map[string]string{"Exito": message})
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathConsultarEstado() + message, http.StatusSeeOther)
 }
 
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
@@ -89,6 +90,11 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	case "VencerRegistracion":
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
+		if err != nil {
+			responderErrorMono(writer, request, http.StatusBadRequest, err.Error())
+			return
+		}
+		responderExitoMono(writer, request, http.StatusAccepted, mensajeEstado)
     default:
     	err = errors.New("ERROR_ACCIONINCORRECTA")
     	log.Println(err)
