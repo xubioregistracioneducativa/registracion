@@ -5,6 +5,7 @@ import (
   "fmt"
   _ "github.com/lib/pq"
   "errors"
+	"log"
 )
 
 const (
@@ -26,7 +27,7 @@ func CrearTablaXRERegistracion(){
 	
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	defer db.Close()
 
@@ -36,7 +37,7 @@ func CrearTablaXRERegistracion(){
 		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Universidad VARCHAR, estado INT);`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 }
 
@@ -44,7 +45,7 @@ func CrearTablaXRELink(){
 
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	defer db.Close()
 
@@ -52,7 +53,7 @@ func CrearTablaXRELink(){
 	(IDRegistracion INT REFERENCES xreregistracion, accion VARCHAR, ValidationCode VARCHAR, primary key(accion, IDRegistracion));`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 }
 
@@ -77,10 +78,16 @@ func insertarNuevaRegistracion(registracion *Registracion) error{
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&registracion.IDRegistracion)
 	if err != nil {
-	  tx.Rollback()
-	  return err
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+	  	return err
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	fmt.Println("New record ID is:", registracion.IDRegistracion)
 	return nil
 }
@@ -107,10 +114,16 @@ func updateRegistracion(registracion *Registracion) error {
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, registracion.estado)
 	if err != nil {
-	  tx.Rollback()
-	  return err
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+	  	return err
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	fmt.Println("Se updateo el registro con ID:", registracion.IDRegistracion)
 
 	return nil
@@ -259,10 +272,16 @@ func insertarNuevoLink(link *Link) error {
 
 	_ , err = tx.Exec(sqlStatement, link.RegistracionID, link.Accion, link.ValidationCode)
 	if err != nil {
-		tx.Rollback()
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
 		return err
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	fmt.Println("Se inserto el link.")
 	return nil
 }
@@ -283,10 +302,16 @@ func eliminarLinksPorID(IDRegistracion int) error {
 
 	_ , err = tx.Exec(sqlStatement, IDRegistracion)
 	if err != nil {
-		tx.Rollback()
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
 		return err
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

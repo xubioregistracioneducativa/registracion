@@ -3,19 +3,20 @@ package configuracion
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"os"
 	"sync"
 )
 
 type ConfiguracionStruct struct {
-	Puerto string				`json:"puerto"`
-	UrlMono string				`json:"urlMono"`
-	UrlStudent string			`json:"urlStudent"`
-	EnviaEmails	bool			`json:"enviaEmails"`
-	EmailPrueba string			`json:"emailPrueba"`
-	ValidaCaptcha bool			`json:"validaCaptcha"`
-	CodigoSalteaCaptcha string 	`json:"codigoSalteaCaptcha"`
-	NombreArchivoMensajes string 	`json:"nombreArchivoMensajes"`
+	Puerto string					`json:"puerto"`
+	UrlMono string					`json:"urlMono"`
+	UrlStudent string				`json:"urlStudent"`
+	EnviaEmails	bool				`json:"enviaEmails"`
+	EmailPrueba string				`json:"emailPrueba"`
+	ValidaCaptcha bool				`json:"validaCaptcha"`
+	CodigoSalteaCaptcha string 		`json:"codigoSalteaCaptcha"`
+	NombreArchivoMensajes string	`json:"nombreArchivoMensajes"`
 }
 
 var configuracion ConfiguracionStruct
@@ -33,7 +34,7 @@ func CargarConfiguracion() {
 		case "T":
 			config_filename = "config-testing.json"
 		default:
-			panic(errors.New("La variable de entorno no esta configurada correctamente"))
+			log.Panic(errors.New("La variable de entorno no esta configurada correctamente"))
 		}
 		file, _ := os.Open(config_filename)
 		defer file.Close()
@@ -41,7 +42,7 @@ func CargarConfiguracion() {
 
 		err := decoder.Decode(&configuracion)
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 	})
 }

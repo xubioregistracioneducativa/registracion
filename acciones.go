@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
+	"log"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
 		writer.WriteHeader(http.StatusInternalServerError)
 		_, err = writer.Write([]byte(err.Error()))
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 		return
 	}
@@ -22,7 +23,7 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
 	writer.WriteHeader(status)
 	_ , err = writer.Write([]byte(response))
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 }
  
@@ -90,6 +91,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
     default:
     	err = errors.New("ERROR_ACCIONINCORRECTA")
+    	log.Println(err)
  	 }
 
   	if err != nil {
@@ -103,11 +105,13 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 
 func handlePanic(writer http.ResponseWriter, request *http.Request) {
 	if recoveredError := recover(); recoveredError != nil{
+		log.Println(recoveredError)
 		responderError(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
 	}
 }
 
 func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
+
 	defer handlePanic( writer, request)
 
 	var err error
