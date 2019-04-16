@@ -22,9 +22,10 @@ type ConfiguracionStruct struct {
 	DBUser					string		`json:"dbuser"`
 	DBPassword				string		`json:"dbpassword"`
 	DBName					string		`json:"dbname"`
-	UrlExito				string		`json:"urlExito"`
-	UrlError				string		`json:"urlError"`
-	UrlConsultarEstado		string		`json:"urlConsultarEstado"`
+	PathExito				string		`json:"urlExito"`
+	PathError				string		`json:"urlError"`
+	PathConsultarEstado		string		`json:"urlConsultarEstado"`
+	PathEstudiantes			string		`json:"pathestudientes"`
 }
 
 var configuracion ConfiguracionStruct
@@ -108,14 +109,18 @@ func DBName() string  {
 	return configuracion.DBName
 }
 
-func UrlExito() string {
-	return configuracion.UrlExito
+func PathExito() string {
+	return configuracion.PathExito
 }
 
-func UrlError() string {
-	return configuracion.UrlError
+func PathError() string {
+	return configuracion.PathError
 }
 
-func UrlConsultarEstado() string {
-	return configuracion.UrlConsultarEstado
+func PathConsultarEstado() string {
+	return configuracion.PathConsultarEstado
+}
+
+func PathEstudiantes() string {
+	return configuracion.PathEstudiantes
 }

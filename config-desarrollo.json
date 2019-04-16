@@ -1,7 +1,7 @@
 {
   "puerto": ":8081",
   "urlMono": "https://localhost:8443/",
-  "urlStudent": "http://localhost:8081",
+  "urlStudent": "http://localhost:8081/",
   "enviaEmails": false,
   "emailPrueba": "sebastian.taka@hotmail.com",
   "validaCaptcha": false,
@@ -14,5 +14,6 @@
   "dbname": "faf_multitenant_go",
   "urlExito": "ar/exito.jsp?mensaje=",
   "urlError" : "ar/error-accion.jsp?mensaje=",
-  "urlConsultarEstado": "ar/estado-de-registracion.jsp?mensaje="
+  "urlConsultarEstado": "ar/estado-de-registracion.jsp?mensaje=",
+  "pathestudiantes": "ar/estudiantes.jsp"
 }

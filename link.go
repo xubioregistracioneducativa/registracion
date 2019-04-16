@@ -63,13 +63,9 @@ func validarLink(registracionID int, accion string, validationCode string) error
 }
 
 func obtenerUrlLink(link *Link, email string) string {
-  return fmt.Sprintf("%s/%s/%s/%s", configuracion.UrlStudent(), link.Accion, email, link.ValidationCode)
+  return fmt.Sprintf("%s%s/%s/%s", configuracion.UrlStudent(), link.Accion, email, link.ValidationCode)
 }
 
 func obtenerUrlXubioNuevaRegistracion() string {
-  return fmt.Sprintf("%s/%s", configuracion.UrlStudent(), "NuevaRegistracion")
-}
-
-func obtenerUrlRegistracionIngresada() string {
-  return fmt.Sprintf("%s/%s", configuracion.UrlStudent(), "SolicitudIngresada")
+  return fmt.Sprintf("%s%s", configuracion.UrlStudent(), configuracion.PathEstudiantes())
 }

@@ -14,5 +14,6 @@
   "dbname": "faf_multitenant_go",
   "urlExito": "ar/exito.jsp?mensaje=",
   "urlError" : "ar/error-accion.jsp?mensaje=",
-  "urlConsultarEstado": "ar/estado-de-registracion.jsp?mensaje="
+  "urlConsultarEstado": "ar/estado-de-registracion.jsp?mensaje=",
+  "pathestudiantes": "ar/estudiantes.jsp"
 }

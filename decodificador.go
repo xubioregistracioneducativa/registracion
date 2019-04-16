@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -11,7 +12,10 @@ func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
 	tipoDeRequest := request.Header.Get("Content-Type")
 	if tipoDeRequest == "application/x-www-form-urlencoded"{
 		datosRegistracion = DecodificarForm(request)
-	}else {
+	}else if tipoDeRequest == "application/json" {
+		datosRegistracion = DecodificarJson(request)
+	} else {
+		log.Println(tipoDeRequest)
 		datosRegistracion = DecodificarJson(request)
 	}
 	return datosRegistracion
