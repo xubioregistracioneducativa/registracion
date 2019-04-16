@@ -28,7 +28,7 @@ func main() {
   configuracion.CargarConfiguracion()
 
   //###################CrearTablas###################
-  CrearTablas()
+  GetDBHelper().crearTablas()
   //###################LevantarServer################
   router := newRouter()
   fmt.Println("Se empieza a escuchar el puerto")

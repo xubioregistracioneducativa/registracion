@@ -42,7 +42,7 @@ func generarLinkRandom(registracionID int, accion string) error {
 func generarLink(registracionID int, accion string, validationCode string) error{
 
   link := Link{registracionID, accion, validationCode}
-  err := insertarNuevoLink(&link)
+  err := GetDBHelper().insertarNuevoLink(&link)
   if err != nil {
     return err
   }
@@ -52,7 +52,7 @@ func generarLink(registracionID int, accion string, validationCode string) error
 
 
 func validarLink(registracionID int, accion string, validationCode string) error {
-  link, err := obtenerLink(registracionID, accion)
+  link, err := GetDBHelper().obtenerLink(registracionID, accion)
   if err != nil {
     return err
   }

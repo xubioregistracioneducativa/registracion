@@ -13,10 +13,10 @@ func (estado estadoRechazado ) ingresarNuevosDatos (registracion *Registracion) 
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoPendienteAprobacionID
 	var err error
-	if emailDeRegistroLibre((*registracion).Email) {
-		err = insertarNuevaRegistracion(registracion)
+	if GetDBHelper().emailDeRegistroLibre((*registracion).Email) {
+		err = GetDBHelper().insertarNuevaRegistracion(registracion)
 	} else {
-		err = reingresarRegistracion(registracion)
+		err = GetDBHelper().reingresarRegistracion(registracion)
 	}
 	if err != nil {
 		return "", err

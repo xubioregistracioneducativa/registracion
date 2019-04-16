@@ -17,7 +17,7 @@ func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registraci
   var err error
   fmt.Println("Se reinicia la registracion a 0")
   registracion.estado = estadoRechazadoID
-  err = updateRegistracion(registracion)
+  err = GetDBHelper().updateRegistracion(registracion)
   if err != nil {
     return "", err
   }
@@ -32,7 +32,7 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
   var err error
   fmt.Println("Se envía mail al alumno y al profesor")
   registracion.estado = estadoAprobadoID
-  err = updateRegistracion(registracion)
+  err = GetDBHelper().updateRegistracion(registracion)
   if err != nil {
     return "", err
   }
@@ -50,7 +50,7 @@ func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracio
 func (estado estadoPendienteAprobacion ) anularPorCS (registracion *Registracion) (string, error) {
   fmt.Println("Se anula la Registracion")
   registracion.estado = estadoAnuladoID
-  err := reingresarRegistracion(registracion)
+  err := GetDBHelper().reingresarRegistracion(registracion)
   if err != nil {
     return "", err
   }

@@ -12,7 +12,7 @@ type estadoAprobado struct {
 func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
 	fmt.Println("Se guarda la Registracion")
   	registracion.estado = estadoPendienteAprobacionID
-  	err := reingresarRegistracion(registracion)
+  	err := GetDBHelper().reingresarRegistracion(registracion)
   	if err != nil {
   		return "", err
   	}
@@ -35,7 +35,7 @@ func (estado estadoAprobado ) aceptarPorCS (registracion *Registracion) (string,
 func (estado estadoAprobado ) anularPorCS (registracion *Registracion) (string, error) {
 	fmt.Println("Se anula la Registracion")
 	registracion.estado = estadoAnuladoID
-	err := reingresarRegistracion(registracion)
+	err := GetDBHelper().reingresarRegistracion(registracion)
 	if err != nil {
 		return "", err
 	}
@@ -54,7 +54,7 @@ func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) 
 		return "", err
 	}
 	registracion.estado = estadoConfirmadoID
-	err = updateRegistracion(registracion)
+	err = GetDBHelper().updateRegistracion(registracion)
 	if err != nil {
 		return "", err
 	}

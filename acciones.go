@@ -52,7 +52,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	params := mux.Vars(request)
 
-	registracion, err := obtenerRegistracionPorEmail(params["email"])
+	registracion, err := GetDBHelper().obtenerRegistracionPorEmail(params["email"])
 
 	if err != nil {
 		responderError(writer, request, http.StatusBadRequest, err.Error())
@@ -131,7 +131,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	datosRegistracion.Registracion.estado, err = obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
+	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
 		responderError(writer, request, http.StatusBadRequest, err.Error())
@@ -152,7 +152,7 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 		return
 	}
 
-	err = eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
+	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
 		responderError(writer, request, http.StatusBadRequest, err.Error())

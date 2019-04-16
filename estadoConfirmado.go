@@ -37,7 +37,7 @@ func (estado estadoConfirmado ) consultarEstado () string {
 func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) (string, error){
 	fmt.Println("Se guarda la Registracion")
 	registracion.estado = estadoInicioRegistracionID
-	err := reingresarRegistracion(registracion)
+	err := GetDBHelper().reingresarRegistracion(registracion)
 	if err != nil {
 		return "", err
 	}

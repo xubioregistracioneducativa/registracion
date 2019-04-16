@@ -5,15 +5,15 @@ import "github.com/xubioregistracioneducativa/registracion/configuracion"
 //MAIL DE INICIO REGISTRACION CS
 
 func enviarMailCS(registracion *Registracion) error{
-	linkAceptado, err := obtenerLink(registracion.IDRegistracion, "AceptarCS")
+	linkAceptado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "AceptarCS")
 	if err != nil {
 		return err
 	}
-	linkRechazado, err := obtenerLink(registracion.IDRegistracion, "RechazarCS")
+	linkRechazado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "RechazarCS")
 	if err != nil {
 		return err
 	}
-	linkAnulado, err := obtenerLink(registracion.IDRegistracion, "AnularCS")
+	linkAnulado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "AnularCS")
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func botonesMailCS(linkAceptado string, linkRechazado string, linkAnulado string
 //MAIL DE INICIO REGISTRACION ALUMNO
 
 func enviarMailBienvenidaAlumno(registracion *Registracion) error {
-	linkConsultarEstado, err := obtenerLink(registracion.IDRegistracion, "ConsultarEstado")
+	linkConsultarEstado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "ConsultarEstado")
 	if err != nil {
 		return err
 	}
@@ -142,7 +142,7 @@ func mailDeRechazoAlumnos() string{
 
 func enviarMailProfesor(registracion *Registracion) error {
 
-	linkConfirmado, err := obtenerLink(registracion.IDRegistracion, "ConfirmarProfesor")
+	linkConfirmado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "ConfirmarProfesor")
 	if err != nil {
 		return err
 	}
@@ -184,7 +184,7 @@ func BotonesMailProfesor(linkConfirmado string) string {
 
 func enviarMailProfesorReenviado(registracion *Registracion) error {
 
-	linkConfirmado, err := obtenerLink(registracion.IDRegistracion, "ConfirmarProfesor")
+	linkConfirmado, err := GetDBHelper().obtenerLink(registracion.IDRegistracion, "ConfirmarProfesor")
 	if err != nil {
 		return err
 	}

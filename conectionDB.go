@@ -2,26 +2,53 @@ package main
 
 import (
   "database/sql"
-  "fmt"
+	"fmt"
   _ "github.com/lib/pq"
   "errors"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"log"
+	"sync"
 )
 
-func psqlInfo() string{
+ type DataBase interface {
+	crearTablas()
+	insertarNuevaRegistracion(*Registracion) error
+	updateRegistracion(*Registracion) error
+	reingresarRegistracion(*Registracion) error
+	emailDeRegistroLibre(string) bool
+	obtenerRegistracionPorEmail(string) (Registracion, error)
+	obtenerEstadoIDPorEmail(string) (estadoID, error)
+	insertarNuevoLink(*Link) error
+	eliminarLinksPorID(int) error
+	obtenerLink(int, string) (Link, error)
+}
+
+type Postgres struct {
+
+}
+var DBHelper *Postgres
+var onceDB sync.Once
+
+func GetDBHelper() *Postgres {
+	onceDB.Do( func() {
+		DBHelper = &Postgres{}
+	})
+	return DBHelper
+}
+
+func (postgres Postgres) psqlInfo() string{
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		configuracion.DBHost(), configuracion.DBPort(), configuracion.DBUser(), configuracion.DBPassword(), configuracion.DBName())
 }
 
-func CrearTablas()  {
-	CrearTablaXRERegistracion()
-	CrearTablaXRELink()
+func (postgres Postgres) crearTablas()  {
+	postgres.crearTablaXRERegistracion()
+	postgres.crearTablaXRELink()
 }
 
-func CrearTablaXRERegistracion(){
+func (postgres Postgres) crearTablaXRERegistracion(){
 	
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -37,9 +64,9 @@ func CrearTablaXRERegistracion(){
 	}
 }
 
-func CrearTablaXRELink(){
+func (postgres Postgres) crearTablaXRELink(){
 
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -53,10 +80,9 @@ func CrearTablaXRELink(){
 	}
 }
 
+func (postgres Postgres) insertarNuevaRegistracion(registracion *Registracion) error{
 
-func insertarNuevaRegistracion(registracion *Registracion) error{
-
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		return err
@@ -93,9 +119,9 @@ func insertarNuevaRegistracion(registracion *Registracion) error{
 	return nil
 }
 
-func updateRegistracion(registracion *Registracion) error {
+func (postgres Postgres) updateRegistracion(registracion *Registracion) error {
 
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		return err
@@ -134,8 +160,8 @@ func updateRegistracion(registracion *Registracion) error {
 	return nil
 }
 
-func reingresarRegistracion(registracion *Registracion) error {
-	db, err := sql.Open("postgres", psqlInfo())
+func (postgres Postgres) reingresarRegistracion(registracion *Registracion) error {
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		panic(err)
@@ -155,7 +181,7 @@ func reingresarRegistracion(registracion *Registracion) error {
 	  	return err
 	}
 
-	err = updateRegistracion(registracion)
+	err = postgres.updateRegistracion(registracion)
 
 	if err != nil {
 		log.Println(err)
@@ -164,8 +190,8 @@ func reingresarRegistracion(registracion *Registracion) error {
 	return nil
 }
 
-func emailDeRegistroLibre(mail string) bool{
-	db, err := sql.Open("postgres", psqlInfo())
+func (postgres Postgres) emailDeRegistroLibre(mail string) bool{
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -190,37 +216,10 @@ func emailDeRegistroLibre(mail string) bool{
 
 }
 
-
-func obtenerRegistracionPorID(registracionID int) (Registracion, error){
+func (postgres Postgres) obtenerRegistracionPorEmail(email string) (Registracion, error){
 	var registracion Registracion
 
-	db, err := sql.Open("postgres", psqlInfo())
-	if err != nil {
-		log.Println(err)
-		return registracion, err
-	}
-	defer db.Close()
-
-	sqlStatement := `select * from xreregistracion where iDRegistracion = $1;`
-
-	err = db.QueryRow(sqlStatement, registracionID).Scan(&registracion.IDRegistracion, &registracion.Nombre, &registracion.Apellido, &registracion.Email, &registracion.Telefono, &registracion.Carrera, &registracion.Clave, 
-		&registracion.NombreProfesor, &registracion.ApellidoProfesor, &registracion.EmailProfesor, &registracion.Materia, &registracion.Catedra, &registracion.Facultad, &registracion.Universidad, &registracion.estado)
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return registracion , errors.New("ERROR_DATABASE_REGISTRACIONID")
-		}
-		log.Println(err)
-	  	return registracion, err
-	}
-
-	return registracion, nil
-}
-
-func obtenerRegistracionPorEmail(email string) (Registracion, error){
-	var registracion Registracion
-
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		return registracion, err
@@ -243,11 +242,11 @@ func obtenerRegistracionPorEmail(email string) (Registracion, error){
 	return registracion, nil
 }
 
-func obtenerEstadoIDPorEmail(email string) (estadoID, error){
+func (postgres Postgres) obtenerEstadoIDPorEmail(email string) (estadoID, error){
 
 	var estado estadoID
 
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		return 0, err
 	}
@@ -267,8 +266,8 @@ func obtenerEstadoIDPorEmail(email string) (estadoID, error){
 	return estado, nil
 }
 
-func insertarNuevoLink(link *Link) error {
-	db, err := sql.Open("postgres", psqlInfo())
+func (postgres Postgres) insertarNuevoLink(link *Link) error {
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		return err
@@ -302,8 +301,8 @@ func insertarNuevoLink(link *Link) error {
 	return nil
 }
 
-func eliminarLinksPorID(IDRegistracion int) error {
-	db, err := sql.Open("postgres", psqlInfo())
+func (postgres Postgres) eliminarLinksPorID(IDRegistracion int) error {
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		log.Println(err)
 		return err
@@ -336,10 +335,10 @@ func eliminarLinksPorID(IDRegistracion int) error {
 	return nil
 }
 
-func obtenerLink(idregistracion int, accion string) (Link, error) {
+func (postgres Postgres) obtenerLink(idregistracion int, accion string) (Link, error) {
 	var link Link
 
-	db, err := sql.Open("postgres", psqlInfo())
+	db, err := sql.Open("postgres", postgres.psqlInfo())
 	if err != nil {
 		return link, err
 	}
