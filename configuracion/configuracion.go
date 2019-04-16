@@ -17,6 +17,11 @@ type ConfiguracionStruct struct {
 	ValidaCaptcha bool				`json:"validaCaptcha"`
 	CodigoSalteaCaptcha string 		`json:"codigoSalteaCaptcha"`
 	NombreArchivoMensajes string	`json:"nombreArchivoMensajes"`
+	DBHost			string			`json:"dbhost"`
+	DBPort			int				`json:"dbport"`
+	DBUser			string			`json:"dbuser"`
+	DBPassword		string			`json:"dbpassword"`
+	DBName			string			`json:"dbname"`
 }
 
 var configuracion ConfiguracionStruct
@@ -78,4 +83,24 @@ func CodigoSalteaCaptcha() string {
 
 func NombreArchivoMensajes() string {
 	return configuracion.NombreArchivoMensajes
+}
+
+func DBHost() string {
+	return configuracion.DBHost
+}
+
+func DBPort() int {
+	return configuracion.DBPort
+}
+
+func DBUser() string{
+	return configuracion.DBUser
+}
+
+func DBPassword() string{
+	return configuracion.DBPassword
+}
+
+func DBName() string  {
+	return configuracion.DBName
 }

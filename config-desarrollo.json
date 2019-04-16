@@ -6,5 +6,10 @@
   "emailPrueba": "sebastian.taka@hotmail.com",
   "validaCaptcha": false,
   "codigoSalteaCaptcha": "ELCODIGOULTRASECRETO",
-  "nombreArchivoMensajes" : "mensajes.json"
+  "nombreArchivoMensajes" : "mensajes.json",
+  "dbhost": "192.168.30.111",
+  "dbport": 5432,
+  "dbuser": "postgres",
+  "dbpassword": "Post66MM/",
+  "dbname": "faf_multitenant_go"
 }

@@ -5,18 +5,14 @@ import (
   "fmt"
   _ "github.com/lib/pq"
   "errors"
+	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"log"
 )
 
-const (
-  host     = "192.168.30.111"
-  port     = 5432
-  user     = "postgres"
-  password = "Post66MM/"
-  dbname   = "faf_multitenant_go"
-)
-
-var psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+func psqlInfo() string{
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		configuracion.DBHost(), configuracion.DBPort(), configuracion.DBUser(), configuracion.DBPassword(), configuracion.DBName())
+}
 
 func CrearTablas()  {
 	CrearTablaXRERegistracion()
@@ -25,7 +21,7 @@ func CrearTablas()  {
 
 func CrearTablaXRERegistracion(){
 	
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -43,7 +39,7 @@ func CrearTablaXRERegistracion(){
 
 func CrearTablaXRELink(){
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
 		log.Panic(err)
 	}
@@ -60,14 +56,16 @@ func CrearTablaXRELink(){
 
 func insertarNuevaRegistracion(registracion *Registracion) error{
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Println(err)
         return err
     }
 
@@ -78,14 +76,17 @@ func insertarNuevaRegistracion(registracion *Registracion) error{
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&registracion.IDRegistracion)
 	if err != nil {
+		log.Println(err)
 		errRollback := tx.Rollback()
 		if errRollback != nil {
+			log.Println(errRollback)
 			return errRollback
 		}
 	  	return err
 	}
 	err = tx.Commit()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	fmt.Println("New record ID is:", registracion.IDRegistracion)
@@ -94,8 +95,9 @@ func insertarNuevaRegistracion(registracion *Registracion) error{
 
 func updateRegistracion(registracion *Registracion) error {
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	defer db.Close()
@@ -103,6 +105,7 @@ func updateRegistracion(registracion *Registracion) error {
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Println(err)
         return err
     }
 
@@ -114,6 +117,7 @@ func updateRegistracion(registracion *Registracion) error {
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
 		registracion.Facultad, registracion.Universidad, registracion.estado)
 	if err != nil {
+		log.Println(err)
 		errRollback := tx.Rollback()
 		if errRollback != nil {
 			return errRollback
@@ -122,6 +126,7 @@ func updateRegistracion(registracion *Registracion) error {
 	}
 	err = tx.Commit()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	fmt.Println("Se updateo el registro con ID:", registracion.IDRegistracion)
@@ -130,8 +135,9 @@ func updateRegistracion(registracion *Registracion) error {
 }
 
 func reingresarRegistracion(registracion *Registracion) error {
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 	defer db.Close()
@@ -143,23 +149,25 @@ func reingresarRegistracion(registracion *Registracion) error {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return errors.New("SQL: No se encontraron registraciones con ese mail")
+			return errors.New("ERROR_DATABASE_REGISTRACIONEMAIL")
 		}
+		log.Println(err)
 	  	return err
 	}
 
 	err = updateRegistracion(registracion)
 
 	if err != nil {
+		log.Println(err)
 	  	return err
 	}
 	return nil
 }
 
 func emailDeRegistroLibre(mail string) bool{
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	defer db.Close()
 
@@ -170,7 +178,7 @@ func emailDeRegistroLibre(mail string) bool{
 	row := db.QueryRow(sqlStatement, mail)
 	err = row.Scan(&cantidadDeCuentas)
 	if err != nil {
-	  panic(err)
+	  log.Panic(err)
 	}
 
 	fmt.Println(cantidadDeCuentas)
@@ -186,9 +194,10 @@ func emailDeRegistroLibre(mail string) bool{
 func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 	var registracion Registracion
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return registracion, err
 	}
 	defer db.Close()
 
@@ -201,6 +210,7 @@ func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 		if err == sql.ErrNoRows {
 			return registracion , errors.New("ERROR_DATABASE_REGISTRACIONID")
 		}
+		log.Println(err)
 	  	return registracion, err
 	}
 
@@ -210,9 +220,10 @@ func obtenerRegistracionPorID(registracionID int) (Registracion, error){
 func obtenerRegistracionPorEmail(email string) (Registracion, error){
 	var registracion Registracion
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return registracion, err
 	}
 	defer db.Close()
 
@@ -225,6 +236,7 @@ func obtenerRegistracionPorEmail(email string) (Registracion, error){
 		if err == sql.ErrNoRows {
 			return registracion , errors.New("ERROR_DATABASE_REGISTRACIONEMAIL")
 		}
+		log.Println(err)
 		return registracion, err
 	}
 
@@ -235,7 +247,7 @@ func obtenerEstadoIDPorEmail(email string) (estadoID, error){
 
 	var estado estadoID
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
 		return 0, err
 	}
@@ -256,14 +268,16 @@ func obtenerEstadoIDPorEmail(email string) (estadoID, error){
 }
 
 func insertarNuevoLink(link *Link) error {
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -276,10 +290,12 @@ func insertarNuevoLink(link *Link) error {
 		if errRollback != nil {
 			return errRollback
 		}
+		log.Println(err)
 		return err
 	}
 	err = tx.Commit()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	fmt.Println("Se inserto el link.")
@@ -287,14 +303,16 @@ func insertarNuevoLink(link *Link) error {
 }
 
 func eliminarLinksPorID(IDRegistracion int) error {
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -302,14 +320,17 @@ func eliminarLinksPorID(IDRegistracion int) error {
 
 	_ , err = tx.Exec(sqlStatement, IDRegistracion)
 	if err != nil {
+		log.Println(err)
 		errRollback := tx.Rollback()
 		if errRollback != nil {
+			log.Println(errRollback)
 			return errRollback
 		}
 		return err
 	}
 	err = tx.Commit()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	return nil
@@ -318,7 +339,7 @@ func eliminarLinksPorID(IDRegistracion int) error {
 func obtenerLink(idregistracion int, accion string) (Link, error) {
 	var link Link
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo())
 	if err != nil {
 		return link, err
 	}
@@ -332,6 +353,7 @@ func obtenerLink(idregistracion int, accion string) (Link, error) {
 		if err == sql.ErrNoRows {
 			return link , errors.New("ERROR_DATABASE_LINK")
 		}
+		log.Println(err)
 		return link, err
 	}
 
