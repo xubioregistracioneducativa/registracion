@@ -60,16 +60,21 @@ func DecodificarForm(request *http.Request) DatosRegistracion {
 	datosRegistracion.Registracion.Carrera = request.FormValue("carrera")
 	datosRegistracion.Registracion.Facultad = request.FormValue("facultad")
 	datosRegistracion.Registracion.Universidad = request.FormValue("universidad")
-	datosRegistracion.Registracion.NombreProfesor = request.FormValue("nombreProfesor")
-	datosRegistracion.Registracion.ApellidoProfesor = request.FormValue("apellidoProfesor")
-	datosRegistracion.Registracion.EmailProfesor = request.FormValue("emailProfesor")
+	datosRegistracion.Registracion.NombreProfesor = request.FormValue("nombreprofesor")
+	datosRegistracion.Registracion.ApellidoProfesor = request.FormValue("apellidoprofesor")
+	datosRegistracion.Registracion.EmailProfesor = request.FormValue("emailprofesor")
 	datosRegistracion.CaptchaValue = "TODO"
-	datosRegistracion.LeiTerminos = true
-
-
+	datosRegistracion.LeiTerminos = parseBool(request.FormValue("terminosycondiciones"))
 	//Para cerrar la lectura de algo
 	defer request.Body.Close()
 
 	return datosRegistracion
 
+}
+
+func parseBool(booleano string) bool {
+	if booleano == "on"{
+		return true
+	}
+	return false
 }
