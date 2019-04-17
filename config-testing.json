@@ -15,5 +15,6 @@
   "pathexito": "ar/exito.jsp?mensaje=",
   "patherror" : "ar/error-accion.jsp?mensaje=",
   "pathconsultarestado": "ar/estado-de-registracion.jsp?mensaje=",
-  "pathestudiantes": "ar/estudiantes.jsp"
+  "pathestudiantes": "ar/estudiantes.jsp",
+  "secretkeyrecaptcha": "Aca va la key del captcha"
 }

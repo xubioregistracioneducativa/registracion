@@ -26,6 +26,7 @@ type ConfiguracionStruct struct {
 	PathError				string		`json:"patherror"`
 	PathConsultarEstado		string		`json:"pathconsultarEstado"`
 	PathEstudiantes			string		`json:"pathestudientes"`
+	SecretKeyReCaptcha		string		`json:"secretkeyrecaptcha"`
 }
 
 var configuracion ConfiguracionStruct
@@ -123,4 +124,8 @@ func PathConsultarEstado() string {
 
 func PathEstudiantes() string {
 	return configuracion.PathEstudiantes
+}
+
+func SecretKeyReCaptcha() string {
+	return configuracion.SecretKeyReCaptcha
 }

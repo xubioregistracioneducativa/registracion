@@ -4,7 +4,7 @@
   "urlstudent": "http://localhost:8081/",
   "enviaemails": false,
   "emailprueba": "sebastian.taka@hotmail.com",
-  "validacaptcha": false,
+  "validacaptcha": true,
   "codigosalteacaptcha": "ELCODIGOULTRASECRETO",
   "nombrearchivomensajes" : "mensajes.json",
   "dbhost": "192.168.30.111",
@@ -15,5 +15,6 @@
   "pathexito": "ar/exito.jsp?mensaje=",
   "patherror" : "ar/error-accion.jsp?mensaje=",
   "pathconsultarEstado": "ar/estado-de-registracion.jsp?mensaje=",
-  "pathestudiantes": "ar/estudiantes.jsp"
+  "pathestudiantes": "ar/estudiantes.jsp",
+  "secretkeyrecaptcha": "Aca va la key del captcha"
 }

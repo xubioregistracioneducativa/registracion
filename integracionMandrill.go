@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mattbaird/gochimp"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
+	"log"
 	"os"
 )
 
@@ -15,6 +16,7 @@ func enviarMail(email string, asunto string, html string) error {
 	mandrillApi, err := gochimp.NewMandrill(apiKey)
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -35,15 +37,14 @@ func enviarMail(email string, asunto string, html string) error {
 		To:        recipients,
 	}
 
-
-	if os.Getenv("RECENV") == "D"{
-		fmt.Println(asunto)
-	}
 	if configuracion.EnviaEmails(){
 		_, err = mandrillApi.MessageSend(message, false)
+	} else {
+		fmt.Println(asunto)
 	}
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
@@ -78,7 +79,7 @@ func getButton(value string , link string ) string {
 	button += "</div>"
 
 
-	if os.Getenv("RECENV") == "D" {
+	if !configuracion.EnviaEmails() {
 		fmt.Println(link)
 	}
 

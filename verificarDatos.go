@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"regexp"
 	"strings"
 )
@@ -89,17 +88,10 @@ func normalizarDatos(registracion *Registracion){
 }
 
 func verificarCaptcha(captchaValue string) error {
-	if !validarCaptcha(captchaValue) {
+	if !ValidateCaptcha(captchaValue) {
 		return errors.New("ERROR_VALIDACION_CAPTCHA")
 	}
 	return nil
-}
-
-func validarCaptcha(captchaValue string) bool {
-	if !configuracion.ValidaCaptcha(){
-		return true
-	}
-	return false //TODO
 }
 
 func verificarLeiTerminos(leiTerminos bool) error {

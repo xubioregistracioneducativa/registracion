@@ -63,7 +63,7 @@ func DecodificarForm(request *http.Request) DatosRegistracion {
 	datosRegistracion.Registracion.NombreProfesor = request.FormValue("nombreprofesor")
 	datosRegistracion.Registracion.ApellidoProfesor = request.FormValue("apellidoprofesor")
 	datosRegistracion.Registracion.EmailProfesor = request.FormValue("emailprofesor")
-	datosRegistracion.CaptchaValue = "TODO"
+	datosRegistracion.CaptchaValue = request.FormValue("g-recaptcha-response")
 	datosRegistracion.LeiTerminos = parseBool(request.FormValue("terminosycondiciones"))
 	//Para cerrar la lectura de algo
 	defer request.Body.Close()

@@ -4,6 +4,7 @@ import (
   "errors"
   "fmt"
   "github.com/xubioregistracioneducativa/registracion/configuracion"
+  "log"
 )
 
 type Link struct {
@@ -30,6 +31,7 @@ func generarLinks(registracionID int) error {
 func generarLinkRandom(registracionID int, accion string) error {
   validationCode, err := GenerateRandomString(32)
   if err != nil {
+    log.Println(err)
     return err
   }
   err = generarLink(registracionID, accion, validationCode)
@@ -57,7 +59,9 @@ func validarLink(registracionID int, accion string, validationCode string) error
     return err
   }
   if link.ValidationCode != validationCode {
-    return errors.New("El codigo de validacion es incorrecto")
+    err = errors.New("El codigo de validacion es incorrecto")
+    log.Println(err)
+    return err
   }
   return nil
 }
