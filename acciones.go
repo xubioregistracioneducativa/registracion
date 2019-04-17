@@ -127,59 +127,65 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 	err = verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
 	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
+		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
 		return
 	}
 
-	responderExito(writer, request, http.StatusCreated, mensajeEstado)
+	responderExitoCreate(writer, request, http.StatusCreated, mensajeEstado)
 
 }
 
+func responderErrorCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
+	responderJSON(writer, code, map[string]string{"error": message})
+}
 
+func responderExitoCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
+	responderJSON(writer, code, map[string]string{"exito": message})
+}
 
