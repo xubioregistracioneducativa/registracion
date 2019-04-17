@@ -20,7 +20,7 @@ func enviarMailCS(registracion *Registracion) error{
 
 	cuerpo := obtenerCuerpoMailCS(registracion, obtenerUrlLink(&linkAceptado, registracion.Email), obtenerUrlLink(&linkRechazado, registracion.Email), obtenerUrlLink(&linkAnulado, registracion.Email))
 	asunto := "Nueva Registracion Educativa " + registracion.Email
-	err = enviarMail("info@xubio.com", asunto , cuerpo)
+	err = enviarMail(configuracion.EmailCS(), asunto , cuerpo)
 	if err != nil {
 		return err
 	}

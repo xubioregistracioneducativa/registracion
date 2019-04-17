@@ -13,6 +13,7 @@ type ConfiguracionStruct struct {
 	UrlMono 				string		`json:"urlmono"`
 	UrlStudent 				string		`json:"urlstudent"`
 	EnviaEmails				bool		`json:"enviaemails"`
+	UsaEmailPrueba			bool		`json:"usaemailprueba"`
 	EmailPrueba 			string		`json:"emailprueba"`
 	ValidaCaptcha 			bool		`json:"validacaptcha"`
 	CodigoSalteaCaptcha 	string 		`json:"codigosalteacaptcha"`
@@ -27,6 +28,7 @@ type ConfiguracionStruct struct {
 	PathConsultarEstado		string		`json:"pathconsultarEstado"`
 	PathEstudiantes			string		`json:"pathestudientes"`
 	SecretKeyReCaptcha		string		`json:"secretkeyrecaptcha"`
+	EmailCS					string		`json:"emailcs"`
 }
 
 var configuracion ConfiguracionStruct
@@ -128,4 +130,12 @@ func PathEstudiantes() string {
 
 func SecretKeyReCaptcha() string {
 	return configuracion.SecretKeyReCaptcha
+}
+
+func EmailCS() string {
+	return configuracion.EmailCS
+}
+
+func UsaEmailPrueba() bool{
+	return configuracion.UsaEmailPrueba
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/mattbaird/gochimp"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"log"
-	"os"
 )
 
 //ENVIAR UN MAIL GENERAL (CANDIDATO A SER UN PACKAGE APARTE QUE SE ENCARGUE DE LOS MAILS)
@@ -21,13 +20,12 @@ func enviarMail(email string, asunto string, html string) error {
 	}
 
 	var recipient gochimp.Recipient
-	if os.Getenv("RECENV") == "P" {
+	if configuracion.UsaEmailPrueba() {
+		recipient = gochimp.Recipient{Email: configuracion.EmailPrueba()}
+	} else {
 		recipient = gochimp.Recipient{Email: email}
-	} else {recipient = gochimp.Recipient{Email: configuracion.EmailPrueba()}}
+	}
 	recipients := []gochimp.Recipient{recipient}
-
-
-
 
 	message := gochimp.Message{
 		Html:      html,

@@ -1,10 +1,11 @@
 {
   "puerto": ":8081",
-  "urlmono": "https://xubiotesting2.ddns.net/ar",
-  "urlstudent": "https://xubiotesting2.ddns.net/ar/student",
-  "enviaemails": true,
+  "urlmono": "https://localhost:8443/",
+  "urlstudent": "http://localhost:8081/",
+  "enviaemails": false,
+  "usaemailprueba": true,
   "emailprueba": "sebastian.taka@hotmail.com",
-  "validacaptcha": true,
+  "validacaptcha": false,
   "codigosalteacaptcha": "ELCODIGOULTRASECRETO",
   "nombrearchivomensajes" : "mensajes.json",
   "dbhost": "192.168.30.111",
@@ -14,7 +15,8 @@
   "dbname": "faf_multitenant_go",
   "pathexito": "ar/exito.jsp?mensaje=",
   "patherror" : "ar/error-accion.jsp?mensaje=",
-  "pathconsultarestado": "ar/estado-de-registracion.jsp?mensaje=",
+  "pathconsultarEstado": "ar/estado-de-registracion.jsp?mensaje=",
   "pathestudiantes": "ar/estudiantes.jsp",
   "secretkeyrecaptcha": "Aca va la key del captcha"
+  "emailCS": "info@xubio.com"
 }
