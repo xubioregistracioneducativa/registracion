@@ -32,8 +32,6 @@ func ValidateCaptcha (captchaValue string) bool {
 
 	validoCaptcha := respuestas["success"].(bool)
 
-	fmt.Println(validoCaptcha)
-
 	return validoCaptcha
 
 }
