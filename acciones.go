@@ -124,64 +124,67 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	datosRegistracion := DecodificarDatosRegistracion(request)
 
-	err = verificarDatosValidos(&datosRegistracion)
+	mensajeExito, err := ingresarNuevaRegistracion(datosRegistracion)
 
 	if err != nil {
 		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
-
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
-
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
-
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
-
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
-
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-	err = enviarMailCS(&datosRegistracion.Registracion)
-	if err != nil {
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	responderNuevaRegistracion(writer, request, http.StatusBadRequest, mensajeEstado)
+	responderNuevaRegistracion(writer, request, http.StatusBadRequest, mensajeExito)
 
 }
 
 //Pisa el codigo porque el ajax solo acepta status 200 TODO
 func responderNuevaRegistracion(writer http.ResponseWriter, request *http.Request, code int, codigoDeMensaje string) {
 	responderJSON(writer, http.StatusOK, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
+}
+
+func ingresarNuevaRegistracion(datosRegistracion DatosRegistracion) (string, error){
+	err := verificarDatosValidos(&datosRegistracion)
+
+	if err != nil {
+		return "", nil
+	}
+
+	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
+
+	if err != nil {
+		return "", nil
+	}
+
+	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
+
+	if err != nil {
+		return "", nil
+	}
+
+	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
+
+	if err != nil {
+		return "", nil
+	}
+
+	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
+
+	if err != nil {
+		return "", nil
+	}
+
+	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
+
+	if err != nil {
+		return "", nil
+	}
+
+	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
+	if err != nil {
+		return "", nil
+	}
+	err = enviarMailCS(&datosRegistracion.Registracion)
+	if err != nil {
+		return "", nil
+	}
+
+	return mensajeEstado, nil
 }
