@@ -59,7 +59,7 @@ func validarLink(registracionID int, accion string, validationCode string) error
     return err
   }
   if link.ValidationCode != validationCode {
-    err = errors.New("El codigo de validacion es incorrecto")
+    err = errors.New("ERROR_LINK_VALIDACION")
     log.Println(err)
     return err
   }

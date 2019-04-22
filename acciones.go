@@ -112,7 +112,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 func handlePanic(writer http.ResponseWriter, request *http.Request) {
 	if recoveredError := recover(); recoveredError != nil{
 		log.Println(recoveredError)
-		responderErrorCreate(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
 	}
 }
 
@@ -127,65 +127,61 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 	err = verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
-		responderErrorCreate(writer, request, http.StatusCreated, err.Error())
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	responderExitoCreate(writer, request, http.StatusCreated, mensajeEstado)
+	responderNuevaRegistracion(writer, request, http.StatusBadRequest, mensajeEstado)
 
 }
 
-func responderErrorCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
-	responderJSON(writer, http.StatusOK, map[string]string{"error": message})
+//Pisa el codigo porque el ajax solo acepta status 200 TODO
+func responderNuevaRegistracion(writer http.ResponseWriter, request *http.Request, code int, codigoDeMensaje string) {
+	responderJSON(writer, http.StatusOK, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
 }
-
-func responderExitoCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
-	responderJSON(writer, http.StatusOK, map[string]string{"exito": message})
-}
-

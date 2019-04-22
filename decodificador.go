@@ -44,10 +44,13 @@ func DecodificarJson(request *http.Request) DatosRegistracion {
 
 func DecodificarForm(request *http.Request) DatosRegistracion {
 
+	//Para cerrar la lectura
+	defer request.Body.Close()
+
 	err := request.ParseForm()
 
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	var datosRegistracion DatosRegistracion
 	datosRegistracion.Registracion.Nombre = request.FormValue("nombre")
@@ -65,8 +68,7 @@ func DecodificarForm(request *http.Request) DatosRegistracion {
 	datosRegistracion.Registracion.EmailProfesor = request.FormValue("emailprofesor")
 	datosRegistracion.CaptchaValue = request.FormValue("g-recaptcha-response")
 	datosRegistracion.LeiTerminos = parseBool(request.FormValue("terminosycondiciones"))
-	//Para cerrar la lectura de algo
-	defer request.Body.Close()
+
 
 	return datosRegistracion
 

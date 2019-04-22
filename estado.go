@@ -1,6 +1,9 @@
 package main
 
-import "errors"
+import (
+    "errors"
+    "log"
+)
 
 type estadoID int
 
@@ -38,6 +41,7 @@ func nuevoEstado (idEstado estadoID) (estado, error) {
     case estadoAnuladoID:
         return estadoAnulado{}, nil
     default:
-    return nil, errors.New("Esta registracion se encuentra en un estado desconocido")
+        log.Panic("Esta registracion se encuentra en un estado desconocido")
+        return nil, errors.New("Esta registracion se encuentra en un estado desconocido")
   }
 }
