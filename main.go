@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "github.com/gorilla/handlers"
   "github.com/xubioregistracioneducativa/registracion/configuracion"
   "log"
   "net/http"
@@ -31,8 +32,11 @@ func main() {
   GetDBHelper().crearTablas()
   //###################LevantarServer################
   router := newRouter()
+ // headers:= handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "Access-Control-Allow-Origin", "application/x-www-form-urlencoded", "application/json", "application/x-www-form-urlencoded;charset=UTF-8"})
+  //methods :=  handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
+  //origins := handlers.AllowedOrigins([]string{"*"})
   fmt.Println("Se empieza a escuchar el puerto")
-  server := http.ListenAndServe(configuracion.Puerto(), router)
+  server := http.ListenAndServeTLS(configuracion.Puerto(),"server.crt", "server.key", handlers.CORS()(router))
 
   log.Fatal(server)
 

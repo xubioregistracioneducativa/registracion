@@ -10,7 +10,7 @@ func DecodificarDatosRegistracion(request *http.Request) DatosRegistracion {
 
 	var datosRegistracion DatosRegistracion
 	tipoDeRequest := request.Header.Get("Content-Type")
-	if tipoDeRequest == "application/x-www-form-urlencoded"{
+	if tipoDeRequest == "application/x-www-form-urlencoded" || tipoDeRequest == "application/x-www-form-urlencoded;charset=UTF-8" {
 		datosRegistracion = DecodificarForm(request)
 	}else if tipoDeRequest == "application/json" {
 		datosRegistracion = DecodificarJson(request)

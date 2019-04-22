@@ -112,7 +112,7 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 func handlePanic(writer http.ResponseWriter, request *http.Request) {
 	if recoveredError := recover(); recoveredError != nil{
 		log.Println(recoveredError)
-		responderError(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
+		responderErrorCreate(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
 	}
 }
 
@@ -182,10 +182,10 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 }
 
 func responderErrorCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
-	responderJSON(writer, code, map[string]string{"error": message})
+	responderJSON(writer, http.StatusOK, map[string]string{"error": message})
 }
 
 func responderExitoCreate(writer http.ResponseWriter, request *http.Request, code int, message string) {
-	responderJSON(writer, code, map[string]string{"exito": message})
+	responderJSON(writer, http.StatusOK, map[string]string{"exito": message})
 }
 
