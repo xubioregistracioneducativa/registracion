@@ -144,42 +144,42 @@ func ingresarNuevaRegistracion(datosRegistracion DatosRegistracion) (string, err
 	err := verificarDatosValidos(&datosRegistracion)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	datosRegistracion.Registracion.estado, err = GetDBHelper().obtenerEstadoIDPorEmail(datosRegistracion.Registracion.Email)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	estado, err := nuevoEstado(datosRegistracion.Registracion.estado)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	mensajeEstado, err := estado.ingresarNuevosDatos(&datosRegistracion.Registracion)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	err = GetDBHelper().eliminarLinksPorID(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	err = generarLinks(datosRegistracion.Registracion.IDRegistracion)
 
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	err = enviarMailBienvenidaAlumno(&datosRegistracion.Registracion)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	err = enviarMailCS(&datosRegistracion.Registracion)
 	if err != nil {
