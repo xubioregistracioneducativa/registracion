@@ -18,5 +18,6 @@
   "pathconsultarEstado": "ar/estado-de-registracion.jsp?mensaje=",
   "pathestudiantes": "ar/estudiantes.jsp",
   "secretkeyrecaptcha": "Aca va la key del captcha"
-  "emailCS": "info@xubio.com"
+  "emailCS": "info@xubio.com",
+  "mandrillkey": "ACA VA LA KEY MANDRILL"
 }

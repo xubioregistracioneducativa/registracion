@@ -29,6 +29,7 @@ type ConfiguracionStruct struct {
 	PathEstudiantes			string		`json:"pathestudientes"`
 	SecretKeyReCaptcha		string		`json:"secretkeyrecaptcha"`
 	EmailCS					string		`json:"emailcs"`
+	MandrillKey				string		`json:"mandrillkey"`
 }
 
 var configuracion ConfiguracionStruct
@@ -138,4 +139,8 @@ func EmailCS() string {
 
 func UsaEmailPrueba() bool{
 	return configuracion.UsaEmailPrueba
+}
+
+func MandrillKey() string {
+	return configuracion.MandrillKey
 }

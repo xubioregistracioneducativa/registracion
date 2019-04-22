@@ -11,7 +11,7 @@ import (
 
 func enviarMail(email string, asunto string, html string) error {
 	//apiKey := os.Getenv("MANDRILL_KEY")
-	apiKey := "zd_43LHDhNTbyE89_70HtQ"
+	apiKey := configuracion.MandrillKey()
 	mandrillApi, err := gochimp.NewMandrill(apiKey)
 
 	if err != nil {
