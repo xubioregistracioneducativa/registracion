@@ -9,108 +9,110 @@ import (
 	"net/http"
 )
 
-func responderJSON(writer http.ResponseWriter, status int, payload interface{}) {
-	response, err := json.Marshal(payload)
-	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		_, err = writer.Write([]byte(err.Error()))
-		if err != nil {
-			log.Panic(err)
-		}
-		return
-	}
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(status)
-	_ , err = writer.Write([]byte(response))
-	if err != nil {
-		log.Panic(err)
-	}
-}
+type TipoDeRespuesta int
 
-func responderMono(writer http.ResponseWriter, r *http.Request, code int, codigoDeMensaje string){
-	responderJSON(writer, http.StatusOK, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
-}
-
-
-func responderExito(w http.ResponseWriter, r *http.Request, code int, message string) {
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathExito() + message, http.StatusSeeOther)
-}
-
-func responderError(w http.ResponseWriter, r *http.Request, code int, message string) {
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathError() + message, http.StatusSeeOther)
-}
-
-func responderEstado(w http.ResponseWriter, r *http.Request, code int, message string) {
-	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathConsultarEstado() + message, http.StatusSeeOther)
-}
+const (  // iota is reset to 0
+	responderExito TipoDeRespuesta = iota  // c0 == 0
+	responderError   // c1 == 1
+	responderConsulta // c2 == 2
+)
 
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 	defer handlePanic(writer, request)
 
 	params := mux.Vars(request)
 
-	registracion, err := GetDBHelper().obtenerRegistracionPorEmail(params["email"])
+	tipoDeRespuesta, mensaje := modificarRegistracion(params["email"], params["accion"], params["validationCode"])
+
+	responderModificacion(writer, request, tipoDeRespuesta, mensaje, params["accion"])
+
+}
+
+func responderModificacion(writer http.ResponseWriter, r *http.Request, tipoDeRespuesta TipoDeRespuesta, codigoDeMensaje string, accion string){
+	if accion != "VencerRegistracion" {
+		switch tipoDeRespuesta {
+		case responderExito:
+			responderRedireccionExito(writer, r, http.StatusSeeOther, codigoDeMensaje)
+		case responderError:
+			responderRedireccionError(writer, r, http.StatusSeeOther, codigoDeMensaje)
+		case responderConsulta:
+			responderRedireccionConsultarEstado(writer, r, http.StatusSeeOther, codigoDeMensaje)
+		default:
+			log.Panicln("Se obtuvo un tipo de respuesta inesperada")
+		}
+	} else {
+		switch tipoDeRespuesta {
+		case responderExito:
+			responderMensajeJson(writer, r, http.StatusOK, codigoDeMensaje)
+		case responderError:
+			responderMensajeJson(writer, r, http.StatusBadRequest, codigoDeMensaje)
+		case responderConsulta:
+			responderMensajeJson(writer, r, http.StatusOK, codigoDeMensaje)
+		default:
+			log.Panicln("Se obtuvo un tipo de respuesta inesperada")
+		}
+	}
+}
+
+func recuperarPanic(tipo *TipoDeRespuesta, mensaje *string){
+	if recoveredError := recover(); recoveredError != nil{
+		log.Println(recoveredError)
+		*mensaje = "ERROR_DEFAULT"
+		*tipo = responderError
+	}
+}
+
+func modificarRegistracion(email string, accion string, validationCode string) (tipoDeRespuesta TipoDeRespuesta, mensaje string )  {
+
+	var err error
+
+	defer recuperarPanic(&tipoDeRespuesta, &mensaje)
+
+	registracion, err := GetDBHelper().obtenerRegistracionPorEmail(email)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
-		return
+		return responderError, err.Error()
 	}
 
-	err = validarLink(registracion.IDRegistracion, params["accion"], params["validationCode"]);
+	err = validarLink(registracion.IDRegistracion, accion , validationCode);
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
-		return
+		return responderError, err.Error()
 	}
 
 	estado, err := nuevoEstado(registracion.estado)
 
 	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
-		return
+		return responderError, err.Error()
 	}
 
 	var mensajeEstado string
 
-	switch(params["accion"]) {
-    case "AceptarCS":
+	switch(accion) {
+	case "AceptarCS":
 		mensajeEstado, err = estado.aceptarPorCS(&registracion)
-    case "RechazarCS":
+	case "RechazarCS":
 		mensajeEstado, err = estado.rechazarPorCS(&registracion)
 	case "AnularCS":
 		mensajeEstado, err = estado.anularPorCS(&registracion)
-    case "ConfirmarProfesor":
+	case "ConfirmarProfesor":
 		mensajeEstado, err = estado.confirmarPorProfesor(&registracion)
 	case "ConsultarEstado":
 		mensajeEstado = estado.consultarEstado()
-		responderEstado(writer, request, http.StatusAccepted, mensajeEstado)
-		return
+		return responderConsulta, mensajeEstado
 	case "VencerRegistracion":
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
-		if err != nil {
-			responderMono(writer, request, http.StatusBadRequest, err.Error())
-			return
-		}
-		responderMono(writer, request, http.StatusAccepted, mensajeEstado)
-    default:
-    	err = errors.New("ERROR_ACCIONINCORRECTA")
-    	log.Println(err)
- 	 }
-
-  	if err != nil {
-		responderError(writer, request, http.StatusBadRequest, err.Error())
-		return
+	default:
+		err = errors.New("ERROR_ACCIONINCORRECTA")
+		log.Println(err)
 	}
 
-	responderExito(writer, request, http.StatusSeeOther, mensajeEstado)
-
-}
-
-func handlePanic(writer http.ResponseWriter, request *http.Request) {
-	if recoveredError := recover(); recoveredError != nil{
-		log.Println(recoveredError)
-		responderNuevaRegistracion(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
+	if err != nil {
+		return responderError, err.Error()
 	}
+
+	return responderExito, mensajeEstado
+
 }
 
 func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
@@ -130,11 +132,6 @@ func NuevaRegistracion(writer http.ResponseWriter, request *http.Request){
 
 	responderNuevaRegistracion(writer, request, http.StatusBadRequest, mensajeExito)
 
-}
-
-//Pisa el codigo porque el ajax solo acepta status 200 TODO
-func responderNuevaRegistracion(writer http.ResponseWriter, request *http.Request, code int, codigoDeMensaje string) {
-	responderJSON(writer, http.StatusOK, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
 }
 
 func ingresarNuevaRegistracion(datosRegistracion DatosRegistracion) (string, error){
@@ -184,4 +181,55 @@ func ingresarNuevaRegistracion(datosRegistracion DatosRegistracion) (string, err
 	}
 
 	return mensajeEstado, nil
+}
+
+func handlePanic(writer http.ResponseWriter, request *http.Request) {
+	if recoveredError := recover(); recoveredError != nil{
+		log.Println(recoveredError)
+		responderNuevaRegistracion(writer, request, http.StatusBadRequest,("ERROR_DEFAULT"))
+	}
+}
+
+//Pisa el codigo porque el ajax solo acepta status 200 TODO
+func responderNuevaRegistracion(writer http.ResponseWriter, request *http.Request, code int, codigoDeMensaje string) {
+	responderMensajeJson(writer, request,  http.StatusOK, codigoDeMensaje)
+}
+
+//Responde un JSON como Codigo y Mensaje
+func responderMensajeJson(writer http.ResponseWriter, r *http.Request, code int, codigoDeMensaje string){
+	responderJSON(writer, code, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
+}
+
+//Redirecciona a la pantalla de exito con el mensaje de exito
+func responderRedireccionExito(w http.ResponseWriter, r *http.Request, code int, message string) {
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathExito() + message, http.StatusSeeOther)
+}
+
+//Redirecciona a la pantalla de error con el mensaje de error en la mayoria de los casos, pero HANDLE PANIC esta devolviendo JSON TODO
+func responderRedireccionError(w http.ResponseWriter, r *http.Request, code int, message string) {
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathError() + message, http.StatusSeeOther)
+}
+
+//Redirecciona a la pantalla de consultar estado con el codigo del estado
+func responderRedireccionConsultarEstado(w http.ResponseWriter, r *http.Request, code int, message string) {
+	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathConsultarEstado() + message, http.StatusSeeOther)
+}
+
+//Responder un JSON de forma comun
+func responderJSON(writer http.ResponseWriter, status int, payload interface{}) {
+	response, err := json.Marshal(payload)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		_, err = writer.Write([]byte(err.Error()))
+		if err != nil {
+			log.Panic(err)
+		}
+		return
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(status)
+	_ , err = writer.Write([]byte(response))
+	if err != nil {
+		log.Panic(err)
+	}
 }
