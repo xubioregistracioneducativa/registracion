@@ -37,9 +37,9 @@ func verificarDatosValidos(datosRegistracion *DatosRegistracion) error {
 	if err != nil {
 		return errors.New("ERROR_VALIDACION_VACIO_CARRERA")
 	}
-	err = verificarCampoVacio(datosRegistracion.Registracion.Clave, "Clave")
+	err = verificarClave(datosRegistracion.Registracion.Clave)
 	if err != nil {
-		return errors.New("ERROR_VALIDACION_VACIO_CLAVE")
+		return err
 	}
 	//PAIS
 	err = verificarCampoVacio(datosRegistracion.Registracion.NombreProfesor, "Nombre del profesor")
@@ -101,7 +101,20 @@ func verificarLeiTerminos(leiTerminos bool) error {
 	return nil
 }
 
+func verificarClave(clave string) error {
 
+	err := verificarCampoVacio(clave, "Clave")
+
+	if err != nil {
+		return errors.New("ERROR_VALIDACION_VACIO_CLAVE")
+	}
+
+	if (len(clave) < 8) {
+		return  errors.New( "ERROR_VALIDACION_CLAVE_CARACTERES")
+	}
+
+	return nil
+}
 
 
 func verificarEmailProfesor(emailProfesor string) error {

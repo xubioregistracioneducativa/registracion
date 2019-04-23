@@ -54,6 +54,7 @@
   "ERROR_VALIDACION_INVALIDO_EMAIL": "El email debe tener al menos un @ y un dominio",
   "ERROR_VALIDACION_VACIO_EMAIL": "El email no puede estar vacio",
   "ERROR_VALIDACION_EMAILINVALIDO": "El email debe contener al menos un  @ y un dominio",
+  "ERROR_VALIDACION_CLAVE_CARACTERES": "La clave debe tener al menos 8 caracteres",
   "EXITO_ACEPTAR": "La registracion fue aceptada con exito",
   "EXITO_RECHAZAR": "La registracion fue rechazada con exito",
   "EXITO_ANULAR": "La registracion fue anulada con exito",
