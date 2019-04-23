@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/xubioregistracioneducativa/registracion/configuracion"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"strconv"
@@ -48,6 +49,9 @@ func registrarTenant(registracion *Registracion) error {
 		configuracion.CodigoSalteaCaptcha())
 	var urlencodedstring = []byte(parametros)
 	req, err := http.NewRequest("POST", Direccion, bytes.NewBuffer(urlencodedstring))
+	if err != nil {
+		log.Panic(err)
+	}
 	//req.Header.Set("Accept", "*/*")
 	//req.Header.Set("Accept-Encoding", "gzip, deflate, br")
 	//req.Header.Set("Accept-Language", "es-419,es;q=0.9")
@@ -75,7 +79,7 @@ func registrarTenant(registracion *Registracion) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		log.Panic(err)
 	}
 	defer resp.Body.Close()
 
@@ -83,12 +87,12 @@ func registrarTenant(registracion *Registracion) error {
 	fmt.Println("response Headers:", resp.Header)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		log.Panic(err)
 	}
 	fmt.Println("response Body: "+ string(body) )
 	err = buscarError(string(body))
 	if err != nil{
-		return err
+		log.Panic(err)
 	}
 	// BODY ESPERADO "<createCuenta><errorNum>0</errorNum><mensaje>La creación del usuario se realizó correctamente</mensaje><OK>1</OK></createCuenta>"
 	// BODY ERROR response Body: <createCuenta><errorNum>20</errorNum><mensaje>Ya existe un usuario con el mail ingresado. Si no recuerda la clave utilice la opción de "Olvidé mi clave" en la pantalla de ingreso.</mensaje><OK>0</OK></createCuenta>

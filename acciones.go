@@ -27,13 +27,10 @@ func responderJSON(writer http.ResponseWriter, status int, payload interface{}) 
 	}
 }
 
-func responderExitoMono(w http.ResponseWriter, r *http.Request, code int, message string){
-	responderJSON(w, code, map[string]string{"exito": message})
+func responderMono(writer http.ResponseWriter, r *http.Request, code int, codigoDeMensaje string){
+	responderJSON(writer, http.StatusOK, map[string]string{"codigo": codigoDeMensaje, "mensaje": getMensaje(codigoDeMensaje)})
 }
 
-func responderErrorMono(w http.ResponseWriter, r *http.Request, code int, message string){
-	responderJSON(w, code, map[string]string{"error": message})
-}
 
 func responderExito(w http.ResponseWriter, r *http.Request, code int, message string) {
 	http.Redirect(w, r, configuracion.UrlMono() + configuracion.PathExito() + message, http.StatusSeeOther)
@@ -91,10 +88,10 @@ func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 	case "VencerRegistracion":
 		mensajeEstado, err = estado.vencerRegistracion(&registracion)
 		if err != nil {
-			responderErrorMono(writer, request, http.StatusBadRequest, err.Error())
+			responderMono(writer, request, http.StatusBadRequest, err.Error())
 			return
 		}
-		responderExitoMono(writer, request, http.StatusAccepted, mensajeEstado)
+		responderMono(writer, request, http.StatusAccepted, mensajeEstado)
     default:
     	err = errors.New("ERROR_ACCIONINCORRECTA")
     	log.Println(err)
