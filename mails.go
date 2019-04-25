@@ -220,26 +220,6 @@ func mailDeAnulacionAlumnos() string{
 	return cuerpo
 }
 
-//MAIL ACEPTADO
-
-func enviarMailAceptacionAlumno(registracion *Registracion) error {
-
-	cuerpo := mailDeAceptacionAlumnos()
-	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ACEPTACION"), cuerpo)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func mailDeAceptacionAlumnos() string{
-	cuerpo := "Tu registracion ha sido aceptada por el equipo de Xubio y se envió un mail a tu profesor para que confirme que sos su alumno."
-	cuerpo += "<br>"
-	cuerpo += "Si en dos semanas tu profesor no acepta, tu registracion quedará anulada."
-	cuerpo += "<br><br>"
-	return cuerpo
-}
-
 //MAIL REGISTRACION
 
 func enviarMailRegistracionAlumno(registracion *Registracion) error {

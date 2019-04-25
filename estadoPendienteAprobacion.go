@@ -30,17 +30,13 @@ func (estado estadoPendienteAprobacion ) rechazarPorCS (registracion *Registraci
 
 func (estado estadoPendienteAprobacion ) aceptarPorCS (registracion *Registracion) (string, error) {
   var err error
-  fmt.Println("Se envía mail al alumno y al profesor")
+  fmt.Println("Se envía mail al profesor")
   registracion.estado = estadoAprobadoID
   err = GetDBHelper().updateRegistracion(registracion)
   if err != nil {
     return "", err
   }
   err = enviarMailProfesor(registracion)
-  if err != nil {
-    return "", err
-  }
-  err = enviarMailAceptacionAlumno(registracion)
   if err != nil {
     return "", err
   }
