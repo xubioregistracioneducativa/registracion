@@ -6,6 +6,8 @@
   "EMAIL_ASUNTO_ANULACION": "Su Registracion educativa fue anulada",
   "EMAIL_ASUNTO_ACEPTACION": "Su Registracion educativa fue aceptada",
   "EMAIL_ASUNTO_REGISTROTENANT": "Su cuenta en Xubio Educativo fue aceptada",
+  "EMAIL_ASUNTO_NUEVASOLICITUDCS": "Plan Educativo-Nueva solicitud ",
+  "EMAIL_ASUNTO_NUEVACUENTACS": "Nueva cuenta-Plan estudiante ",
   "ESTADO_INICIO": "Este email no tiene ninguna registracion educativa en curso actualmente",
   "ESTADO_PENDIENTE": "Esta registracion se encuentra pendiente de aprobacion por nuestro equipo",
   "ESTADO_ANULADO": "Esta registracion fue anulada por nuestro equipo, puede volver a cargar una nueva registracion",
@@ -58,7 +60,7 @@
   "EXITO_ACEPTAR": "La registracion fue aceptada con exito",
   "EXITO_RECHAZAR": "La registracion fue rechazada con exito",
   "EXITO_ANULAR": "La registracion fue anulada con exito",
-  "EXITO_INGRESAR": "La registracion fue ingresada con exito",
+  "EXITO_INGRESAR": "Recibimos tu solicitud. Contactaremos a tu profesor para que confirme que eres su alumno y luego te escribiremos.",
   "EXITO_VENCER": "La registracion fue vencida con exito",
-  "EXITO_CONFIRMAR": "La registracion fue confirmada con exito"
+  "EXITO_CONFIRMAR": "Muchas gracias, ahora tu alumno va a contar con una herramienta para poder gestionar una empresa, utilizando la tecnología más avanzada."
 }

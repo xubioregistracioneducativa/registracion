@@ -62,6 +62,10 @@ func (estado estadoAprobado ) confirmarPorProfesor (registracion *Registracion) 
 	if err != nil {
 		return "", err
 	}
+	err = enviarMailConfirmadoCS(registracion)
+	if err != nil {
+		return "", err
+	}
 
 	return "EXITO_CONFIRMAR", nil
 }

@@ -19,7 +19,7 @@ func enviarMailCS(registracion *Registracion) error{
 	}
 
 	cuerpo := obtenerCuerpoMailCS(registracion, obtenerUrlLink(&linkAceptado, registracion.Email), obtenerUrlLink(&linkRechazado, registracion.Email), obtenerUrlLink(&linkAnulado, registracion.Email))
-	asunto := "Nueva Registracion Educativa " + registracion.Email
+	asunto := getMensaje("EMAIL_ASUNTO_NUEVASOLICITUDCS") + registracion.Email
 	err = enviarMail(configuracion.EmailCS(), asunto , cuerpo)
 	if err != nil {
 		return err
@@ -28,14 +28,14 @@ func enviarMailCS(registracion *Registracion) error{
 }
 
 func obtenerCuerpoMailCS(registracion *Registracion, linkAceptado string, linkRechazado string, linkAnulado string ) string {
-	cuerpo := mostrarDatosRegistracion(registracion)
+	cuerpo := "Se recibio una nueva registración:"
+	cuerpo += mostrarDatosRegistracion(registracion)
 	cuerpo += botonesMailCS(linkAceptado, linkRechazado, linkAnulado)
 	return cuerpo
 }
 
 func mostrarDatosRegistracion(registracion *Registracion) string {
-	var result = "Se recibio una nueva registración:"
-	result += "<br><br>"
+	result := "<br><br>"
 	result += "Datos Alumno:"
 	result += "<br>"
 	result += "Nombre Alumno: " + registracion.Nombre
@@ -50,9 +50,9 @@ func mostrarDatosRegistracion(registracion *Registracion) string {
 	result += "<br>"
 	result += "Nombre Profesor: " + registracion.NombreProfesor
 	result += "<br>"
-	result += "Apellido Alumno: " + registracion.ApellidoProfesor
+	result += "Apellido Profesor: " + registracion.ApellidoProfesor
 	result += "<br>"
-	result += "Email Alumno: " + registracion.EmailProfesor
+	result += "Email Profesor: " + registracion.EmailProfesor
 	result += "<br>"
 	result += "Materia " + registracion.Materia
 	result += "<br>"
@@ -120,7 +120,7 @@ func botonesMailAlumno(linkConsultarEstado string) string {
 
 func enviarMailRechazoAlumno(registracion *Registracion) error {
 
-	cuerpo := mailDeRechazoAlumnos()
+	cuerpo := mailDeRechazoAlumnos(registracion.Nombre)
 	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_RECHAZO"), cuerpo)
 	if err != nil {
 		return err
@@ -128,12 +128,12 @@ func enviarMailRechazoAlumno(registracion *Registracion) error {
 	return nil
 }
 
-func mailDeRechazoAlumnos() string{
-	cuerpo := "Tu registracion ha sido rechazada por el equipo de Xubio por no poder corroborar los datos enviados."
+func mailDeRechazoAlumnos(nombreAlumno string) string{
+	cuerpo := "Hola " + nombreAlumno + ". Lamentablemente tu solicitud fue rechazada. Los motivos habituales son: el email de tu profesor no " +
+		"existe o fue rechazado, o tu profesor no confirmó que seas su alumno, o no pudimos verificar que sea profesor universitario."
 	cuerpo += "<br>"
-	cuerpo += "Podes reintentar usando otro profesor en "
 	cuerpo += "<br>"
-	cuerpo += getButton("Xubio Educativo - Nueva Registracion",obtenerUrlXubioNuevaRegistracion() )
+	cuerpo += getButton("Volver a crear cuenta universitaria", obtenerUrlXubioNuevaRegistracion() )
 	cuerpo += "<br><br>"
 	return cuerpo
 }
@@ -161,10 +161,12 @@ func mailProfesor(registracion *Registracion, linkConfirmado string) string{
 }
 
 func mostrarDatosAlumno(registracion *Registracion) string {
-	var result = "El alumno " + registracion.Apellido + ", " + registracion.Nombre
+	result := "Hola " + registracion.NombreProfesor + " " + registracion.ApellidoProfesor + ". Te escribimos de Xubio," +
+		" la Solución de Gestión online. Recibimos una solicitud para crear una cuenta Estudiante en Xubio." +
+		" Para verificar que el solicitante es estudiante universitario te pedimos que confirmes si es alumno tuyo"
+	result += "El alumno " + registracion.Apellido + ", " + registracion.Nombre
 	result += " con email " + registracion.Email
-	result += " indico que es su alumno en la materia " + registracion.Materia + " de la catedra " + registracion.Catedra + " en la carrera " + registracion.Carrera
-	result += " para ingresar al programa de Xubio Estudiantil, que permite que acceda a una cuenta premium de Xubio por un año"
+	result += " indico que es su alumno en la materia " + registracion.Materia + " de la catedra " + registracion.Catedra + " en la carrera " + registracion.Carrera + "."
 	result += "<br><br>"
 	return result
 }
@@ -242,7 +244,7 @@ func mailDeAceptacionAlumnos() string{
 
 func enviarMailRegistracionAlumno(registracion *Registracion) error {
 
-	cuerpo := mailDeRegistracionAlumnos()
+	cuerpo := mailDeRegistracionAlumnos(registracion)
 	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_REGISTROTENANT"), cuerpo)
 	if err != nil {
 		return err
@@ -250,12 +252,37 @@ func enviarMailRegistracionAlumno(registracion *Registracion) error {
 	return nil
 }
 
-func mailDeRegistracionAlumnos() string {
-	cuerpo := "Tu registracion ha sido exitosa."
-	cuerpo += "Ingresa con tu email y contraseña en "
+func mailDeRegistracionAlumnos(registracion *Registracion) string {
+	cuerpo := "Hola " + registracion.Nombre + "! Tu profesor confirmó que eres su alumno, así que ya puedes comenzar a utilizar el plan Estudiantes! " +
+		"<br><br> " +
+		"Muy importante: " +
+		"El plan Estudiantes es gratuito y fue diseñado para que te capacites por tu cuenta en nuestro Centro de Ayuda. " +
+		"No cuenta con atención por mail, chat, ni teléfono. " +
+		"La cuenta estará activa por 365 días, luego de ese tiempo se eliminará junto con toda la información que ingresaste. " +
+		"<br>"
+	cuerpo += "Ingresa con tu email y contraseña en Xubio"
 	cuerpo += "<br>"
-	cuerpo += getButton("Xubio", configuracion.UrlMono())
+	cuerpo += getButton("Ir a Xubio", configuracion.UrlMono())
 	cuerpo += "<br><br>"
 	cuerpo += "En el caso que no recuerdes tu contraseña, podes recuperarla usando Recuperar contraseña. "
+	return cuerpo
+}
+
+// MAIL REGISTRACION CS
+
+func enviarMailConfirmadoCS(registracion *Registracion) error{
+
+	cuerpo := obtenerCuerpoMailConfirmadoCS(registracion)
+	asunto := getMensaje("EMAIL_ASUNTO_NUEVACUENTACS") + registracion.Email
+	err := enviarMail(configuracion.EmailCS(), asunto , cuerpo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func obtenerCuerpoMailConfirmadoCS(registracion *Registracion) string {
+	cuerpo := "Se creo una nueva cuenta: "
+	cuerpo += mostrarDatosRegistracion(registracion)
 	return cuerpo
 }
