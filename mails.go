@@ -202,22 +202,12 @@ func enviarMailProfesorReenviado(registracion *Registracion) error {
 
 func enviarMailAnulacionAlumno(registracion *Registracion) error {
 
-	cuerpo := mailDeAnulacionAlumnos()
+	cuerpo := mailDeRechazoAlumnos(registracion.Nombre)
 	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ANULACION"), cuerpo)
 	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func mailDeAnulacionAlumnos() string{
-	cuerpo := "Tu registracion ha sido anulada porque tu profesor no confirmó tu registracion."
-	cuerpo += "<br>"
-	cuerpo += "Podes reintentar la registracion en: "
-	cuerpo += "<br>"
-	cuerpo += getButton("Xubio Educativo - Nueva Registracion", obtenerUrlXubioNuevaRegistracion() )
-	cuerpo += "<br><br>"
-	return cuerpo
 }
 
 //MAIL REGISTRACION
