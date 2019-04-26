@@ -44,6 +44,23 @@ func (postgres Postgres) psqlInfo() string{
 func (postgres Postgres) crearTablas()  {
 	postgres.crearTablaXRERegistracion()
 	postgres.crearTablaXRELink()
+	postgres.crearTablaMails()
+}
+
+func (postgres Postgres) crearTablaMails(){
+
+	db, err := sql.Open("postgres", postgres.psqlInfo())
+	if err != nil {
+		log.Panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `CREATE TABLE IF NOT EXISTS mailNoEnviado 
+	(idmail SERIAL PRIMARY KEY, email VARCHAR, asunto VARCHAR, cuerpo VARCHAR);`
+	_, err = db.Exec(sqlStatement)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func (postgres Postgres) crearTablaXRERegistracion(){
@@ -357,4 +374,38 @@ func (postgres Postgres) obtenerLink(idregistracion int, accion string) (Link, e
 	}
 
 	return link, nil
+}
+
+func (postgres Postgres) guardarMail(email string, asunto string, html string) error {
+	db, err := sql.Open("postgres", postgres.psqlInfo())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	sqlStatement := `INSERT INTO mailNoEnviado (email, asunto, cuerpo)
+	 VALUES ($1, $2, $3)`
+
+	_ , err = tx.Exec(sqlStatement, email, asunto, html)
+	if err != nil {
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+		log.Println(err)
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }

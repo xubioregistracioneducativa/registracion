@@ -16,7 +16,11 @@ func enviarMail(email string, asunto string, html string) error {
 
 	if err != nil {
 		log.Println(err)
-		return err
+		err = DBHelper.guardarMail(email, asunto, html)
+		if err != nil {
+			log.Panicln(err)
+		}
+		return nil
 	}
 
 	var recipient gochimp.Recipient
@@ -43,7 +47,11 @@ func enviarMail(email string, asunto string, html string) error {
 
 	if err != nil {
 		log.Println(err)
-		return err
+		err = DBHelper.guardarMail(email, asunto, html)
+		if err != nil {
+			log.Panicln(err)
+		}
+		return nil
 	}
 
 	return nil
