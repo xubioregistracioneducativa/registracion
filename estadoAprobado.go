@@ -10,13 +10,7 @@ type estadoAprobado struct {
 }
 
 func (estado estadoAprobado ) ingresarNuevosDatos (registracion *Registracion) (string, error) {
-	fmt.Println("Se guarda la Registracion")
-  	registracion.estado = estadoPendienteAprobacionID
-  	err := GetDBHelper().reingresarRegistracion(registracion)
-  	if err != nil {
-  		return "", err
-  	}
-	return "EXITO_INGRESAR", nil
+	return "", errors.New("ERROR_APROBADA_INGRESAR")
 }
 
 func (estado estadoAprobado ) rechazarPorCS (registracion *Registracion) (string, error) {

@@ -42,6 +42,7 @@ func nuevoEstado (idEstado estadoID) (estado, error) {
         return estadoAnulado{}, nil
     default:
         log.Panic("Esta registracion se encuentra en un estado desconocido")
-        return nil, errors.New("Esta registracion se encuentra en un estado desconocido")
+
   }
+    return nil, errors.New("Esta registracion se encuentra en un estado desconocido") //NO SE EJECUTA PERO SE NECESITA PARA COMPILAR
 }

@@ -33,7 +33,7 @@ func registrarTenant(registracion *Registracion) error {
 		"&newCodigoPromocional=" +
 		"&codigoSalteaCaptcha=%s" +
 		"&soyContador=false" +
-		"&soyEmpresa=true" +
+		"&soyEmpresa=false" +
 		"&soyEstudiante=true" +
 		"&leiTerminos=true" +
 		"&g-recaptcha-response=" +

@@ -52,7 +52,7 @@
   "ERROR_VALIDACION_CAPTCHA": "El captcha es incorrecto",
   "ERROR_VALIDACION_LEITERMINOS": "Debe aceptar los terminos y condiciones",
   "ERROR_VALIDACION_INVALIDO_EMAILPROFESOR": "El email del profesor debe tener al menos un @ y un dominio",
-  "ERROR_VALIDACION_INVALIDO_EMAILPROFESORNOESTUDIANTIL": "El e-mail del profesor debe ser el estudiantil",
+  "ERROR_VALIDACION_INVALIDO_EMAILPROFESORNOESTUDIANTIL": "El e-mail del profesor debe ser el académico",
   "ERROR_VALIDACION_INVALIDO_EMAIL": "El email debe tener al menos un @ y un dominio",
   "ERROR_VALIDACION_VACIO_EMAIL": "El email no puede estar vacio",
   "ERROR_VALIDACION_EMAILINVALIDO": "El email debe contener al menos un  @ y un dominio",
