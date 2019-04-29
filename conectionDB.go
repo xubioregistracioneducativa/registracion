@@ -409,3 +409,49 @@ func (postgres Postgres) guardarMail(email string, asunto string, html string) e
 	}
 	return nil
 }
+
+func (postgres Postgres) obtenerMailsNoEnviados() ([]Mail, error){
+	var mails []Mail;
+
+	db, err := sql.Open("postgres", postgres.psqlInfo())
+
+	if err != nil {
+		log.Println(err)
+		return mails, err
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM mailnoenviado")
+
+	if err != nil {
+		return mails, err
+	}
+
+	for rows.Next(){
+		mail := Mail{}
+		err = rows.Scan(&mail.IDMail, &mail.Email, &mail.Asunto, &mail.Cuerpo)
+		if err != nil {
+			return mails, err
+		}
+		mails = append(mails, mail)
+	}
+
+	return mails, err
+}
+
+func (postgres Postgres) eliminarMails (sliceIDMails []int) {
+	db, err := sql.Open("postgres", postgres.psqlInfo())
+	if err != nil {
+		log.Println(err)
+	}
+	defer db.Close()
+
+	sqlStatement := `DELETE FROM XRELink WHERE IDRegistracion = $1`
+
+	for  i := 0; i < len(sliceIDMails); i++ {
+		_ , err = db.Exec(sqlStatement, sliceIDMails[i])
+		if err != nil {
+			log.Printf("No se pudo eliminar el mail con ID: %d ", sliceIDMails[i])
+		}
+	}
+}

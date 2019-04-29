@@ -9,18 +9,24 @@ import (
 
 //ENVIAR UN MAIL GENERAL (CANDIDATO A SER UN PACKAGE APARTE QUE SE ENCARGUE DE LOS MAILS)
 
+func enviarOGuardarMail(email string, asunto string, html string) error {
+	err := enviarMail(email, asunto, html)
+	if err != nil{
+		err = DBHelper.guardarMail(email, asunto, html)
+		if err != nil {
+			log.Panicln(err)
+		}
+	}
+	return nil
+}
+
 func enviarMail(email string, asunto string, html string) error {
 	//apiKey := os.Getenv("MANDRILL_KEY")
 	apiKey := configuracion.MandrillKey()
 	mandrillApi, err := gochimp.NewMandrill(apiKey)
 
 	if err != nil {
-		log.Println(err)
-		err = DBHelper.guardarMail(email, asunto, html)
-		if err != nil {
-			log.Panicln(err)
-		}
-		return nil
+		return err
 	}
 
 	var recipient gochimp.Recipient
@@ -46,12 +52,7 @@ func enviarMail(email string, asunto string, html string) error {
 	}
 
 	if err != nil {
-		log.Println(err)
-		err = DBHelper.guardarMail(email, asunto, html)
-		if err != nil {
-			log.Panicln(err)
-		}
-		return nil
+		return err
 	}
 
 	return nil

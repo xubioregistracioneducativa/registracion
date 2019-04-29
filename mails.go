@@ -20,7 +20,7 @@ func enviarMailCS(registracion *Registracion) error{
 
 	cuerpo := obtenerCuerpoMailCS(registracion, obtenerUrlLink(&linkAceptado, registracion.Email), obtenerUrlLink(&linkRechazado, registracion.Email), obtenerUrlLink(&linkAnulado, registracion.Email))
 	asunto := getMensaje("EMAIL_ASUNTO_NUEVASOLICITUDCS") + registracion.Email
-	err = enviarMail(configuracion.EmailCS(), asunto , cuerpo)
+	err = enviarOGuardarMail(configuracion.EmailCS(), asunto , cuerpo)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func enviarMailBienvenidaAlumno(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := bienvenidaStudent(registracion, obtenerUrlLink(&linkConsultarEstado, registracion.Email))
-	err = enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_BIENVENIDA"), cuerpo)
+	err = enviarOGuardarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_BIENVENIDA"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -121,7 +121,7 @@ func botonesMailAlumno(linkConsultarEstado string) string {
 func enviarMailRechazoAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeRechazoAlumnos(registracion.Nombre)
-	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_RECHAZO"), cuerpo)
+	err := enviarOGuardarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_RECHAZO"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func enviarMailProfesor(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado, registracion.Email))
-	err = enviarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_ALUMNONUEVOPROFESOR"), cuerpo)
+	err = enviarOGuardarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_ALUMNONUEVOPROFESOR"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -191,7 +191,7 @@ func enviarMailProfesorReenviado(registracion *Registracion) error {
 		return err
 	}
 	cuerpo := mailProfesor(registracion, obtenerUrlLink(&linkConfirmado, registracion.Email))
-	err = enviarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_REINTENTARALUMNOPROFESOR" ), cuerpo)
+	err = enviarOGuardarMail(registracion.EmailProfesor, getMensaje("EMAIL_ASUNTO_REINTENTARALUMNOPROFESOR" ), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -203,7 +203,7 @@ func enviarMailProfesorReenviado(registracion *Registracion) error {
 func enviarMailAnulacionAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeRechazoAlumnos(registracion.Nombre)
-	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ANULACION"), cuerpo)
+	err := enviarOGuardarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_ANULACION"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -215,7 +215,7 @@ func enviarMailAnulacionAlumno(registracion *Registracion) error {
 func enviarMailRegistracionAlumno(registracion *Registracion) error {
 
 	cuerpo := mailDeRegistracionAlumnos(registracion)
-	err := enviarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_REGISTROTENANT"), cuerpo)
+	err := enviarOGuardarMail(registracion.Email, getMensaje("EMAIL_ASUNTO_REGISTROTENANT"), cuerpo)
 	if err != nil {
 		return err
 	}
@@ -244,7 +244,7 @@ func enviarMailConfirmadoCS(registracion *Registracion) error{
 
 	cuerpo := obtenerCuerpoMailConfirmadoCS(registracion)
 	asunto := getMensaje("EMAIL_ASUNTO_NUEVACUENTACS") + registracion.Email
-	err := enviarMail(configuracion.EmailCS(), asunto , cuerpo)
+	err := enviarOGuardarMail(configuracion.EmailCS(), asunto , cuerpo)
 	if err != nil {
 		return err
 	}
