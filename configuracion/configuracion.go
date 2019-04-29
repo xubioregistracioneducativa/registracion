@@ -30,6 +30,7 @@ type ConfiguracionStruct struct {
 	SecretKeyReCaptcha		string		`json:"secretkeyrecaptcha"`
 	EmailCS					string		`json:"emailcs"`
 	MandrillKey				string		`json:"mandrillkey"`
+	TiempoMailNoEnviadoSeg 	int 		`json:"tiempomailnoenviadoseg"`
 }
 
 var configuracion ConfiguracionStruct
@@ -143,4 +144,8 @@ func UsaEmailPrueba() bool{
 
 func MandrillKey() string {
 	return configuracion.MandrillKey
+}
+
+func TiempoMailNoEnviadoSeg() int {
+	return configuracion.TiempoMailNoEnviadoSeg
 }

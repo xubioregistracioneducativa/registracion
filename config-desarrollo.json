@@ -20,4 +20,5 @@
   "secretkeyrecaptcha": "Aca va la key del captcha"
   "emailCS": "info@xubio.com",
   "mandrillkey": "ACA VA LA KEY MANDRILL"
+  "tiempomailnoenviadoseg": 5
 }

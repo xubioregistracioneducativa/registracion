@@ -446,7 +446,7 @@ func (postgres Postgres) eliminarMails (sliceIDMails []int) {
 	}
 	defer db.Close()
 
-	sqlStatement := `DELETE FROM XRELink WHERE IDRegistracion = $1`
+	sqlStatement := `DELETE FROM mailnoenviado WHERE idmail = $1`
 
 	for  i := 0; i < len(sliceIDMails); i++ {
 		_ , err = db.Exec(sqlStatement, sliceIDMails[i])
