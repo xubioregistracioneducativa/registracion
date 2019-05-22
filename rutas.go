@@ -39,5 +39,11 @@ var routes = Routes{
 		"/NuevaRegistracion",
 		NuevaRegistracion,
 	},
+	Route{
+		"Healthy",
+		"GET",
+		"/healthy",
+		Healthy,
+	},
 }
 

@@ -17,6 +17,11 @@ const (  // iota is reset to 0
 	responderConsulta // c2 == 2
 )
 
+//Sirve para controlar el estado de salud
+func Healthy(writer http.ResponseWriter, request *http.Request) {
+	writer.Write([]byte("Healthy"))
+}
+
 func ModificarRegistracion(writer http.ResponseWriter, request *http.Request){
 	defer handlePanic(writer, request)
 
