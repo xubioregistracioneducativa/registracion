@@ -19,12 +19,15 @@ func main() {
 
 
   //#####################LOGGER#####################
-  logger, err := os.OpenFile("errors.log", os.O_CREATE | os.O_RDWR | os.O_APPEND, 0666)
+  /*logger, err := os.OpenFile("errors.log", os.O_CREATE | os.O_RDWR | os.O_APPEND, 0666)
   if err != nil {
     log.Println("Error opening/creating database log file")
   }
+
+
   defer logger.Close()
-  log.SetOutput(logger)
+  */
+  log.SetOutput(os.Stdout)
   //###################CargarConfiguracion###########
   configuracion.CargarConfiguracion()
 
