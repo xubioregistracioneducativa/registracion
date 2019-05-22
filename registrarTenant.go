@@ -16,9 +16,9 @@ import (
 )
 
 func registrarTenant(registracion *Registracion) error {
-	//Direccion := "http://localhost:8080/NOSecure/PUReceiveFeed"
-	Direccion := "https://localhost:8443/CreateCuenta"
-	//Direccion := "https://xubio.com/CreateCuenta"
+	//Direccion := "configuracion.UrlMono() + "NOSecure/PUReceiveFeed"
+	Direccion := configuracion.UrlMono() + "CreateCuenta"
+	//Direccion := "configuracion.UrlMono() + "CreateCuenta"
 	fmt.Println("URL:>", Direccion)
 	//var valores = url.Values{"key": {"Value"}, "id": {"123"}}
 	//resp, err := http.PostForm(Direccion, valores)
