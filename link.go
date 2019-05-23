@@ -71,5 +71,5 @@ func obtenerUrlLink(link *Link, email string) string {
 }
 
 func obtenerUrlXubioNuevaRegistracion() string {
-  return fmt.Sprintf("%s%s", configuracion.UrlStudent(), configuracion.PathEstudiantes())
+  return fmt.Sprintf("%s%s", configuracion.UrlMono(), configuracion.PathEstudiantes())
 }
