@@ -26,7 +26,7 @@ type ConfiguracionStruct struct {
 	PathExito				string		`json:"pathexito"`
 	PathError				string		`json:"patherror"`
 	PathConsultarEstado		string		`json:"pathconsultarEstado"`
-	PathEstudiantes			string		`json:"pathestudientes"`
+	PathEstudiantes			string		`json:"pathestudiantes"`
 	SecretKeyReCaptcha		string		`json:"secretkeyrecaptcha"`
 	EmailCS					string		`json:"emailcs"`
 	MandrillKey				string		`json:"mandrillkey"`
