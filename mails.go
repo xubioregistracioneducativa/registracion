@@ -99,9 +99,7 @@ func enviarMailBienvenidaAlumno(registracion *Registracion) error {
 	return nil
 }
 func bienvenidaStudent(registracion *Registracion, linkConsultarEstado string) string{
-	cuerpo := "<h3>¡Bienvenido a Xubio Student!</h3>"
-	cuerpo += "<br>"
-	cuerpo += "Ya recibimos su solicitud y estaremos analizandola en los proximos dias."
+	cuerpo := "Ya recibimos su solicitud y estaremos analizandola en los proximos dias."
 	cuerpo += "<br><br>"
 	cuerpo += botonesMailAlumno(linkConsultarEstado)
 	return cuerpo
@@ -161,12 +159,12 @@ func mailProfesor(registracion *Registracion, linkConfirmado string) string{
 }
 
 func mostrarDatosAlumno(registracion *Registracion) string {
-	result := "Hola " + registracion.NombreProfesor + " " + registracion.ApellidoProfesor + ". Te escribimos de Xubio," +
-		" la Solución de Gestión online. Recibimos una solicitud para crear una cuenta Estudiante en Xubio." +
-		" Para verificar que el solicitante es estudiante universitario te pedimos que confirmes si es alumno tuyo"
-	result += "El alumno " + registracion.Apellido + ", " + registracion.Nombre
+	result := "Hola " + registracion.NombreProfesor + " " + registracion.ApellidoProfesor + ".<br><br> Te escribimos de Xubio," +
+		" la Solución de Gestión online.<br><br> Recibimos una solicitud para crear una cuenta Estudiante en Xubio." +
+		" Para verificar que el solicitante es estudiante universitario te pedimos que confirmes si es alumno tuyo. <br><br>"
+	result += "\"El alumno " + registracion.Apellido + ", " + registracion.Nombre
 	result += " con email " + registracion.Email
-	result += " indico que es su alumno en la materia " + registracion.Materia + " de la catedra " + registracion.Catedra + " en la carrera " + registracion.Carrera + "."
+	result += " indicó que es su alumno en la materia " + registracion.Materia + " de la cátedra " + registracion.Catedra + " en la carrera " + registracion.Carrera + ".\""
 	result += "<br><br>"
 	return result
 }
