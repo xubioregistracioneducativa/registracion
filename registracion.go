@@ -21,6 +21,11 @@ type Registracion struct {
   Catedra string 			`json:"catedra"`
   Facultad string 			`json:"facultad"`
   Universidad string 		`json:"universidad"`
+  Utm_source    string
+  Utm_medium    string
+  Utm_term      string
+  Utm_content   string
+  Utm_campaign  string
   estado estadoID    			
   //estado  estado `gorm:"polymorphic:Owner;"`
 }

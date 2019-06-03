@@ -74,7 +74,7 @@ func (postgres Postgres) crearTablaXRERegistracion(){
 	sqlStatement := `CREATE TABLE IF NOT EXISTS XRERegistracion 
 	(idregistracion SERIAL PRIMARY KEY, Nombre VARCHAR, Apellido VARCHAR, Email VARCHAR UNIQUE NOT NULL, Telefono VARCHAR,
 		Carrera VARCHAR, Clave VARCHAR, NombreProfesor VARCHAR, ApellidoProfesor VARCHAR, EmailProfesor VARCHAR NOT NULL,
-		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Universidad VARCHAR, estado INT);`
+		Materia VARCHAR, Catedra VARCHAR, Facultad VARCHAR, Universidad VARCHAR, estado INT, Utm_source VARCHAR, Utm_medium VARCHAR, Utm_term VARCHAR, Utm_content VARCHAR, Utm_campaign Varchar);`
 	_, err = db.Exec(sqlStatement)
 	if err != nil {
 		log.Panic(err)
@@ -112,12 +112,12 @@ func (postgres Postgres) insertarNuevaRegistracion(registracion *Registracion) e
         return err
     }
 
-	sqlStatement := `INSERT INTO XRERegistracion (Nombre, Apellido, Email, Telefono, Carrera, Clave, NombreProfesor, ApellidoProfesor, EmailProfesor, Materia, Catedra, Facultad, Universidad, estado)
-	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING idregistracion`
+	sqlStatement := `INSERT INTO XRERegistracion (Nombre, Apellido, Email, Telefono, Carrera, Clave, NombreProfesor, ApellidoProfesor, EmailProfesor, Materia, Catedra, Facultad, Universidad, estado, Utm_source, Utm_medium, Utm_term, Utm_content, Utm_campaign)
+	 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) RETURNING idregistracion`
 
 	err = tx.QueryRow(sqlStatement, registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
-		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID).Scan(&registracion.IDRegistracion)
+		registracion.Facultad, registracion.Universidad, estadoPendienteAprobacionID, registracion.Utm_source, registracion.Utm_medium, registracion.Utm_term, registracion.Utm_content, registracion.Utm_campaign).Scan(&registracion.IDRegistracion)
 	if err != nil {
 		log.Println(err)
 		errRollback := tx.Rollback()
@@ -154,11 +154,11 @@ func (postgres Postgres) updateRegistracion(registracion *Registracion) error {
 
 	sqlStatement := `
 	UPDATE XRERegistracion
-	SET Nombre = $2, Apellido = $3, Email = $4, Telefono = $5, Carrera = $6, Clave = $7, NombreProfesor = $8, ApellidoProfesor = $9, EmailProfesor = $10, Materia = $11, Catedra = $12, Facultad = $13, Universidad = $14, estado = $15
+	SET Nombre = $2, Apellido = $3, Email = $4, Telefono = $5, Carrera = $6, Clave = $7, NombreProfesor = $8, ApellidoProfesor = $9, EmailProfesor = $10, Materia = $11, Catedra = $12, Facultad = $13, Universidad = $14, estado = $15,  Utm_source = $16, Utm_medium = $17, Utm_term = $18, Utm_content = $19, Utm_campaign = $20 
 	WHERE idregistracion = $1;`
 	_, err = tx.Exec(sqlStatement, registracion.IDRegistracion ,registracion.Nombre, registracion.Apellido, registracion.Email, registracion.Telefono, registracion.Carrera,
 		registracion.Clave, registracion.NombreProfesor, registracion.ApellidoProfesor, registracion.EmailProfesor, registracion.Materia, registracion.Catedra,
-		registracion.Facultad, registracion.Universidad, registracion.estado)
+		registracion.Facultad, registracion.Universidad, registracion.estado, registracion.Utm_source, registracion.Utm_medium, registracion.Utm_term, registracion.Utm_content, registracion.Utm_campaign)
 	if err != nil {
 		log.Println(err)
 		errRollback := tx.Rollback()
@@ -246,7 +246,7 @@ func (postgres Postgres) obtenerRegistracionPorEmail(email string) (Registracion
 	sqlStatement := `select * from xreregistracion where email = $1;`
 
 	err = db.QueryRow(sqlStatement, email).Scan(&registracion.IDRegistracion, &registracion.Nombre, &registracion.Apellido, &registracion.Email, &registracion.Telefono, &registracion.Carrera, &registracion.Clave,
-		&registracion.NombreProfesor, &registracion.ApellidoProfesor, &registracion.EmailProfesor, &registracion.Materia, &registracion.Catedra, &registracion.Facultad, &registracion.Universidad, &registracion.estado)
+		&registracion.NombreProfesor, &registracion.ApellidoProfesor, &registracion.EmailProfesor, &registracion.Materia, &registracion.Catedra, &registracion.Facultad, &registracion.Universidad, &registracion.estado,  &registracion.Utm_source, &registracion.Utm_medium, &registracion.Utm_term, &registracion.Utm_content, &registracion.Utm_campaign)
 
 	if err != nil {
 		if err == sql.ErrNoRows {

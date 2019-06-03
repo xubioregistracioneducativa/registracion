@@ -77,6 +77,26 @@ func registrarTenant(registracion *Registracion) error {
 		},
 	}
 
+	req.AddCookie(&http.Cookie{
+		Name: "utm_source",
+		Value: registracion.Utm_source,
+	})
+	req.AddCookie(&http.Cookie{
+		Name: "utm_medium",
+		Value: registracion.Utm_medium,
+	})
+	req.AddCookie(&http.Cookie{
+		Name: "utm_term",
+		Value: registracion.Utm_term,
+	})
+	req.AddCookie(&http.Cookie{
+		Name: "utm_content",
+		Value: registracion.Utm_content,
+	})
+	req.AddCookie(&http.Cookie{
+		Name: "utm_campaign",
+		Value: registracion.Utm_campaign,
+	})
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Panic(err)
