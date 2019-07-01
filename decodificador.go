@@ -51,7 +51,7 @@ func DecodificarForm(request *http.Request) DatosRegistracion {
 
 	if err != nil {
 		log.Panic(err)
-	}
+	};
 	var datosRegistracion DatosRegistracion
 	datosRegistracion.Registracion.Nombre = request.FormValue("nombre")
 	datosRegistracion.Registracion.Apellido = request.FormValue("apellido")
@@ -66,6 +66,11 @@ func DecodificarForm(request *http.Request) DatosRegistracion {
 	datosRegistracion.Registracion.NombreProfesor = request.FormValue("nombreprofesor")
 	datosRegistracion.Registracion.ApellidoProfesor = request.FormValue("apellidoprofesor")
 	datosRegistracion.Registracion.EmailProfesor = request.FormValue("emailprofesor")
+	datosRegistracion.Registracion.Utm_source = request.FormValue("utm_source")
+	datosRegistracion.Registracion.Utm_medium = request.FormValue("utm_medium")
+	datosRegistracion.Registracion.Utm_term = request.FormValue("utm_term")
+	datosRegistracion.Registracion.Utm_content = request.FormValue("utm_content")
+	datosRegistracion.Registracion.Utm_campaign = request.FormValue("utm_campaign")
 	datosRegistracion.CaptchaValue = request.FormValue("g-recaptcha-response")
 	datosRegistracion.LeiTerminos = parseBool(request.FormValue("terminosycondiciones"))
 

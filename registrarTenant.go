@@ -77,26 +77,12 @@ func registrarTenant(registracion *Registracion) error {
 		},
 	}
 
-	req.AddCookie(&http.Cookie{
-		Name: "utm_source",
-		Value: registracion.Utm_source,
-	})
-	req.AddCookie(&http.Cookie{
-		Name: "utm_medium",
-		Value: registracion.Utm_medium,
-	})
-	req.AddCookie(&http.Cookie{
-		Name: "utm_term",
-		Value: registracion.Utm_term,
-	})
-	req.AddCookie(&http.Cookie{
-		Name: "utm_content",
-		Value: registracion.Utm_content,
-	})
-	req.AddCookie(&http.Cookie{
-		Name: "utm_campaign",
-		Value: registracion.Utm_campaign,
-	})
+	agregarCookieSiNoEsVacia(req, "utm_source", registracion.Utm_source)
+	agregarCookieSiNoEsVacia(req, "utm_medium", registracion.Utm_medium)
+	agregarCookieSiNoEsVacia(req, "utm_term", registracion.Utm_term)
+	agregarCookieSiNoEsVacia(req, "utm_content", registracion.Utm_content)
+	agregarCookieSiNoEsVacia(req, "utm_campaign", registracion.Utm_campaign)
+
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Panic(err)
@@ -141,4 +127,15 @@ func buscarError(body string) error {
 		return errors.New(substrings[1])
 	}
 	return nil
+}
+
+
+func agregarCookieSiNoEsVacia(req *http.Request, clave string, valor string){
+	var err = noEstaVacio(valor);
+	if err == nil {
+		req.AddCookie(&http.Cookie{
+			Name: clave,
+			Value: valor,
+		})
+	}
 }
