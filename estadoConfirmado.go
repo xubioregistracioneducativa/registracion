@@ -41,5 +41,5 @@ func (estado estadoConfirmado ) vencerRegistracion (registracion *Registracion) 
 	if err != nil {
 		return "", err
 	}
-	return "EXITO_CONFIRMAR", nil
+	return "EXITO_VENCER", nil
 }
